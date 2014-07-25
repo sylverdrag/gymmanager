@@ -124,134 +124,43 @@ else
 	echo ' is broken. ('. $id .' - make sure there are sessions remaining on that contract)<br>';
 }
 
+## test 7: Add a session to the database
+echo '<b># test 7 # $session->add_session_to_db()</b> - test disabled to avoid crashing (that function does not check if the session_id is unique) Enable only if there is a problem logging the session)';
+//$session->set_client_id("clt_20140723_111111");
+//$session->set_trainer_id("tnr_20140723_111111");
+//$session->set_contract_id("ctt_20140723_111111");
+//$session->set_session_id("ses_20140723_111112");
+//$session->set_session_date(date("Y-m-d H:m:s"));
+//$session->set_session_type("testing add_session");
+//$session->set_comments("This is a system test.");
+//if ($session->add_session_to_db())
+//{
+//    echo ' is working properly.<br>';
+//}
+//else
+//{
+//	echo ' is broken. (or the record already exists in the database - check that first.) <br>';
+//}
 
-//## test 2: getUserByID()
-//$userData = $user->getUserByID("usr_20090309_140339");
-//$falseID = $user->getUserByID("usr_20090309_14039");
-//if ($falseID === false && is_array($userData))
-//{
-//	echo '$user->getUserByID is working properly.<br>';
-//}
-//else
-//{
-//	echo '$user->getUserByID is broken.<br>';
-//}
-//
-//## test 2.1: getUserByEmail()
-//$userData ="";
-//$userData = $user->getUserByEmail("info@your-translations.com");
-//if (!$userData)
-//{
-//    echo '$user->getUserByEmail doesn\'t work  <br />';
-//}
-//else
-//{
-//    echo '$user->getUserByEmail works fine: ';
-//    print_r($userData);
-//    echo "<br />";
-//}
-//
-//## test 3: isValidName()
-//$testName = "Mc' éric";
-//if ($user->isValidName($testName))
-//{
-//	echo '$user->isValidName() is working properly.<br>';
-//}
-//else{
-//	echo '$user->isValidName() is broken.<br>';
-//}
-//
-//## test 4: login()
-//if ($user->userExists("sylver"))
-//{
-//	$user->setPassword("2k3c3f38"); 
-//	if ($user->login() && $_SESSION[login] == "yes")
-//	{
-//		echo '$user->login() is working properly.<br>';
-//	}
-//	else
-//	{
-//		echo '$user->login() is broken.<br>';
-//	}
-//}
-//else
-//{
-//	echo "userExists() failled so Login() was not tested.";
-//}
-//
-//## test 5: isValidPhone()
-//if ($user->isValidPhone("(+66)831.544.598") && !$user->isValidPhone("'drop table"))
-//{
-//	echo '$user->isValidPhone($phone) is working properly<br>';
-//}
-//else 
-//{
-//	echo '$user->isValidPhone($phone) is broken<br>';
-//}
-//
-//## test 6: addNewUser()
-//unset($user);
-//// create a fake $_POST to simulate Form data
-//$fakePOST[firstName] 	= "Johny";
-//$fakePOST[lastName] 	= "Bronco";
-//$fakePOST[userName] 	= "JohnyB";
-//$fakePOST[usrPass] 		= "mypass";
-//$fakePOST[email]	 	= "Johny@test.com";
-//$fakePOST[referer]		= "http://somewebsite.com";
-//
-//$useradd = new users($connect, $key);
-////setting mandatory fields
-//$useradd->setFirstName($fakePOST[firstName]);
-//$useradd->setLastName($fakePOST[lastName]);
-//$useradd->setUserName($fakePOST[userName]);
-//$useradd->setPassword($fakePOST[usrPass]);
-//$useradd->setEmail($fakePOST[email]);
-//$useradd->setReferer($fakePOST[referer]);
-//// add new user
-//if ($useradd->addNewUser(true))
-//{
-//	echo '$useradd->addNewUser() is working properly<br>'; 
-//}
-//else
-//{
-//	echo '$useradd->addNewUser() is broken (or the user was already in the database).<br>';
-//}
-//
-//## test 7: validateReg()
-//$useradd->validateReg("02c18cf0e20e15f36e793df4b6719acb");
-//
-//## test 8: updateUser()
-//
-//$useradd->ID = "usr_20090316_180325";
-////$useradd->setPassword("new password");
-//$useradd->setAccess_admin("no");
-//$useradd->setAccess_client("no");
-//$useradd->setAccess_eBook("yes");
-//$useradd->setAccess_member("yes");
-//$useradd->setAccess_terminoBoxPro("no");
-//$useradd->setAccess_transPicPro("no");
-//$useradd->setAccess_translator("no");
-//$useradd->setCellphone("24567812393");
-//$useradd->setLastName("Schmuck");
-//$useradd->setPhone("29309877342");
-//$useradd->setAddressLine1("21 vesterbrogade");
-//$useradd->setAddressLine2("");
-//$useradd->setCity("copenhavn");
-//$useradd->setCountry("Denmark");
-//$useradd->setPostCode("13820");
-//$updateResult = $useradd->updateUser();
-//if ($updateResult)
-//{
-//	echo '$useradd->updateUser() seems to be working fine<br>' ."\n";
-//}
-//else
-//{
-//	echo '$useradd->updateUser() is broken.<br>' . "\n";
-//}
-//
-//## test 9: Translator class
-//
-//$translator = new translator($connect, $key);
-//$translator->setUserName("Joe");
-//echo $translator->getUserName();
+
+## test 8: log the makafraking session
+echo '<b># test 8 # $session->logSession()</b>';
+$session->set_client_id("clt_20140723_111111");
+$session->set_trainer_id("tnr_20140723_111111");
+$session->set_contract_id("ctt_20140723_111111");
+$session->set_session_id("ses_20140723_111113");
+$session->set_session_date(date("Y-m-d H:m:s"));
+$session->set_session_type("test: log session");
+$session->set_comments("This is a system test.");
+
+
+if ($session->log_session())
+{
+    echo ' is working properly.<br>';
+}
+else
+{
+    echo ' is broken.<br>';
+}
+
 ?>

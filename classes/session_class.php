@@ -153,7 +153,7 @@ class session
      * Log the details of a session in the database
      * #Status: not tested
      */	
-    function logSession()
+    function log_session()
     {
         try
         {
@@ -171,14 +171,20 @@ class session
             {
                 // Check if there are remaining sessions in the contract
                 $nb_remaining_sessions = $this->get_nb_remaining_sessions_in_contract($this->contract_id);
-                /* @var $nb_remaining_sessions type int*/
+                /* @var $nb_remaining_sessions type int */
                 if ($nb_remaining_sessions > 0)
                 {
                     // time to log the effing session
-                    $this->add_session_to_db();
-                    // deduct one session from the contract.
-                    $this->decrement_remaining_sessions_in_contract($this->contract_id);
-                    
+                    if ($this->add_session_to_db())
+                    {
+                        // deduct one session from the contract.
+                        $this->decrement_remaining_sessions_in_contract($this->contract_id);
+                        return TRUE;
+                    }
+                    else
+                    {
+                        return FALSE;
+                    }
                 }
                 else
                 {
@@ -216,7 +222,7 @@ class session
             $trainer_id = $this->trainer_id;
             $type = $this->type;
             $comments = $this->comments;
-            $stmt->execute();
+            return $stmt->execute();
         } catch (PDOException $e) {
             print "Error!: " . $e->getMessage() . "<br/>";
             die;
