@@ -1,4 +1,4 @@
-<form action="handlers/adminFormHandler.php" method="POST" enctype="multipart/form-data" class="dataInput" name="AddUser" onSubmit="return confirmSubmit()">
+<form action="handlers/gymHandler.php" method="POST" enctype="multipart/form-data" class="dataInput" name="AddUser" onSubmit="return confirmSubmit()">
 <div class="formTitle">Create new contract</div>
 <fieldset class="formFieldSet">
 <input type='hidden' name='mandatory' value='contract_id;client_id;creation_date;training_type;package;nb_session_bought;rate_per_session;sold_by;start_date;expire_date;remaining_sessions;trainer_rate_modifier;comments'>

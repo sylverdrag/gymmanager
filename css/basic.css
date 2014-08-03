@@ -1,0 +1,65 @@
+/*
+    Copyright Sylvain Galibert 2014
+    Created on : August 3, 2014, 11:29:08 PM
+*/
+
+/* RESET */
+html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote, pre, form, fieldset, table, th, td
+{
+    margin: 0;
+    padding: 0;
+}
+
+body
+{
+    font-family: 'kreon', 'Open Sans',Helvetica,Arial,sans-serif;
+    line-height:1.6; 
+    font-weight: normal;
+    font-size:100%;
+    /* background: url('dark-hive/images/ui-bg_loop_25_000000_21x21.png') repeat #000;    */
+}
+
+.main
+{
+    width: 600px; 
+    margin: 10px auto;
+}
+
+/* Forms */
+.formTitle
+{
+    margin: 5px auto; 
+    width: 600px; 
+    text-align: center; 
+    font-variant: small-caps; 
+    font-size: 1.6em;
+}
+fieldset
+{
+    margin: 10px;
+    padding: 10px;
+}
+.lbl_regular
+{
+	display: inline-block;
+	vertical-align:top;
+	color: navy;
+	min-width: 230px;
+        margin: 3px 10px;
+}
+.entryField
+{
+    margin: 3px 10px;
+    padding: 4px;
+    width: 280px;
+}
+#bt_submit
+{
+    margin: 10px;
+}
+.boxsizingBorder 
+{
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}

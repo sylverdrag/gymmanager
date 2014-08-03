@@ -17,25 +17,25 @@ if ($_GET[action] == "edit" && is_array($_SESSION[userR]))
 {
   $existingData = $_SESSION[userR];  
   unset($_SESSION[userR]);
-  $formName = "editUser";
+  $formName = "Create training package";
   $options[formTitle] = "Edit User";
-  $formPurpose = "<input type=\"hidden\" value=\"editUser\" name=\"formPurpose\" />";
+  $formPurpose = "<input type=\"hidden\" value=\"create_package\" name=\"formPurpose\" />";
   $ignoredFields = array("addedBy", "creationDate");
   $options[hidden][ID] = $existingData[ID];
 }
 else
 {
   $existingData = $_SESSION[postValues];
-  $formName = "Add new trainer";
+  $formName = "Create training package";
   $options[formTitle] = "Add User";
-  $formPurpose = "<input type=\"hidden\" value=\"addArticle\" name=\"formPurpose\" />";
+  $formPurpose = "<input type=\"hidden\" value=\"create_package\" name=\"formPurpose\" />";
   $ignoredFields = array("art_ID", "user_ID");
 }
 
 //print_r($existingData);
 
 $db_name = "sylver_gymmngr";
-$tbl = "trainers";
+$tbl = "training_packages";
 
 
 $options[error] = $_SESSION[formErrors];
