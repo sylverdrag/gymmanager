@@ -65,7 +65,17 @@ class gym_manager_class
     public $trainer_rate_yoga           = "";
     public $trainer_rate_trx            = "";
     
-    
+    /**
+     * contract-specific variables
+     */
+    public $contract_creation_date      = "";
+    public $branch                      = "";
+    public $start_date                  = "";
+    public $expire_date                 = "";
+    public $remaining_sessions          = "";
+    public $trainer_rate_modifier       = "";
+
+
     ### Class methods ###
     function __construct($dbLink)
     {
@@ -266,7 +276,7 @@ class gym_manager_class
             $client_id = $this->client_id;
             $contract_id = $this->contract_id;
             $trainer_id = $this->trainer_id;
-            $type = $this->type;
+            $type = $this->get_session_type();
             $comments = $this->comments;
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -538,6 +548,70 @@ class gym_manager_class
         }
     }
 
+### Handle contracts
+    
+    /**
+     * Checks that the data for the new trainer makes sense and calls "add_trainer_to_db()"
+     */
+    function create_contract()
+    {
+        try
+        {
+            // If the contract_id exists already, make a new one
+            // Shouldn't happen - add a better id generation system if it ever becomes a problem
+            if ($this->exists_contract_id($this->contract_id)){
+                $this->set_contract_id("ctt_" . date("Ymd_Hms"));
+            }
+                        
+            if ($this->add_contract_to_db()) { return TRUE; } else { return FALSE; }
+                        
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+
+    }
+
+    function add_contract_to_db()
+    {
+        try {
+            $stmt = $this->connect->prepare("INSERT INTO contracts (contract_id, client_id, creation_date, branch, training_type, package, nb_sessions, price_per_session, start_date, expire_date, remaining_sessions, trainer_rate_modifier, comments) " . 
+                                  "VALUES (:contract_id, :client_id, :creation_date, :branch, :training_type, :package, :nb_sessions, :price_per_session, :start_date, :expire_date, :remaining_sessions, :trainer_rate_modifier, :comments)");
+            $stmt->bindParam(':contract_id', $contract_id);
+            $stmt->bindParam(':client_id', $client_id);
+            $stmt->bindParam(':creation_date', $creation_date);
+            $stmt->bindParam(':branch', $branch);
+            $stmt->bindParam(':training_type', $training_type);
+            $stmt->bindParam(':package', $package);
+            $stmt->bindParam(':nb_sessions', $nb_sessions);
+            $stmt->bindParam(':price_per_session', $price_per_session);
+            $stmt->bindParam(':start_date', $start_date);
+            $stmt->bindParam(':expire_date', $expire_date);
+            $stmt->bindParam(':remaining_sessions', $remaining_sessions);
+            $stmt->bindParam(':trainer_rate_modifier', $trainer_rate_modifier);
+            $stmt->bindParam(':comments', $comments);
+
+            $contract_id = $this->get_contract_id();
+            $client_id = $this->get_client_id();
+            $creation_date = $this->contract_creation_date;
+            $branch = $this->branch;
+            $training_type = $this->get_session_type();
+            $package = $this->package_id;
+            $nb_sessions = $this->nb_sessions;
+            $price_per_session = $this->price_per_session;
+            $start_date = $this->start_date;
+            $expire_date = $this->expire_date;
+            $remaining_sessions = $this->remaining_sessions;
+            $trainer_rate_modifier = $this->trainer_rate_modifier;
+            $comments = $this->get_comments();
+
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+
     
 ### Filling forms
 
@@ -573,6 +647,22 @@ class gym_manager_class
         }
     }
 
+    /*
+     * Get the list of all active trainers. This is used to populate the drop down box of clients.
+     * Returns an array of arrays [n][client_id], [n][first_name], [n][last_name]
+     */
+    function get_packages_list()
+    {
+        try {
+            $stmt = $this->connect->prepare("SELECT * FROM training_packages WHERE active = \"yes\"");
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+
     
     /*
      * Get the list of all contracts with remaining sessions for a specific client_id. 
@@ -583,15 +673,22 @@ class gym_manager_class
     {
         try {
             $today = date("Y-m-d H:m:s");
-            $stmt = $this->connect->prepare("SELECT * FROM contracts WHERE client_id = :clientid AND expire_date > '$today'");
+            $stmt = $this->connect->prepare("SELECT * FROM contracts WHERE client_id = :clientid AND expire_date > '$today' AND remaining_sessions > 0");
             $stmt->bindParam(':clientid', $client_id );
             $client_id = $id;
             $stmt->execute();
-            $contracts = $stmt->fetchAll();
+            $contracts["data"] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($contracts["data"]) > 0)
+            {
+                $contracts["status"] = "ok";
+            }
+            else 
+            {
+                $contracts["status"] = "no valid contract found";
+            }
             return $contracts;
         } catch (PDOException $e) {
-            print "Error!: " . $e->getMessage() . "<br/>";
-            die;
+            return '{"status":"PDO database access error." . $e->getMessage() }';
         }
     }
 

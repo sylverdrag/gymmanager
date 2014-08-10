@@ -35,25 +35,28 @@ $gymmngr = new gym_manager_class($dbh);
 $nb_error = 0; // Error counter
 
 #1# Explode "mandatory" and check all fields in "mandatory" are not blank
-$mandat = explode(";", $_POST["mandatory"]);
-foreach ($mandat as $key=>$value)
+if ($_POST["mandatory"] != "") // making sure there are mandatory fields - not true of ajax calls
 {
-  if($_POST[$value] == "")
-  {
-    $nb_error++;
-    $_SESSION["formErrors"][$value] = "color:red;font-weight: bold;";
-    $_SESSION["formErrors"]["errMsg"] .= "$value can not be empty.<br />\r\n";
-  }
-}
+    $mandat = explode(";", $_POST["mandatory"]);
 
-#1b# Check if there is any error. If yes, load all $_POST values in $_SESSION and send the user back to the form
-if ($nb_error!=0){
-  $_SESSION["postValues"]= $_POST;
-  $_SESSION["formErrors"]["errMsg"] = "Sorry, $nb_error errors found:<br />\r\n" . $_SESSION["formErrors"]["errMsg"];
-  $referPage=$_SERVER["HTTP_REFERER"];
-  header("location: $referPage");  
-  die;
+    foreach ($mandat as $key=>$value)
+    {
+      if($_POST[$value] == "")
+      {
+        $nb_error++;
+        $_SESSION["formErrors"][$value] = "color:red;font-weight: bold;";
+        $_SESSION["formErrors"]["errMsg"] .= "$value can not be empty.<br />\r\n";
+      }
+    }
 
+    #1b# Check if there is any error. If yes, load all $_POST values in $_SESSION and send the user back to the form
+    if ($nb_error!=0){
+      $_SESSION["postValues"]= $_POST;
+      $_SESSION["formErrors"]["errMsg"] = "Sorry, $nb_error errors found:<br />\r\n" . $_SESSION["formErrors"]["errMsg"];
+      $referPage=$_SERVER["HTTP_REFERER"];
+      header("location: $referPage");  
+      die;
+    }
 }
 
 ##-## Start processing the user input based on the source form purpose ##-## 
@@ -98,17 +101,57 @@ switch ($formPurpose){
         
         break;
 
-    case "logSession":   ###### Log a training session from a client -  happens after every training session ########
+    case "create_package":   ###### Creates a new training package ######
+        $gymmngr->package_id = $_POST["package_id"];
+        $gymmngr->package_name = $_POST["name"];
+        $gymmngr->set_session_type($_POST["type"]);
+        $gymmngr->nb_sessions = $_POST["nb_sessions"];
+        $gymmngr->price_per_session = $_POST["price_per_session"];
+        $gymmngr->package_active = $_POST["active"];
+        $gymmngr->package_discount = $_POST["discount"];
+        $gymmngr->package_comments = $_POST["comments"];
+
+        if ($gymmngr->create_package()){ echo 'ok, package created'; } else { echo 'error: Failled to create package'; }
+        
+        break;
+        
+    case "create_contract":   ###### Creates a new contract ######
+        $gymmngr->set_contract_id($_POST["contract_id"]);
+        $gymmngr->set_client_id($_POST["client_id"]);
+        $gymmngr->contract_creation_date = $_POST["creation_date"];
+        $gymmngr->branch = $_POST["branch"];
+        $gymmngr->set_session_type($_POST["training_type"]);
+        $gymmngr->package_id = $_POST["package_id"];
+        $gymmngr->nb_sessions = $_POST["nb_sessions"];
+        $gymmngr->price_per_session = $_POST["price_per_session"];
+        $gymmngr->start_date = $_POST["start_date"];
+        $gymmngr->expire_date = $_POST["expire_date"];
+        $gymmngr->remaining_sessions = $_POST["remaining_sessions"];
+        $gymmngr->trainer_rate_modifier = $_POST["trainer_rate_modifier"];
+        $gymmngr->set_comments($_POST["comments"]);
+
+
+        if ($gymmngr->create_contract()){ echo 'ok, contract created'; } else { echo 'error: Failled to create contract'; }
+        
+        break;
+        
+    case "log_session":   ###### After every training session, the session is logged and the contract remaining sessions is updated ######
         $gymmngr->set_client_id($_POST["client_id"]);
         $gymmngr->set_trainer_id($_POST["trainer_id"]);
         $gymmngr->set_contract_id($_POST["contract_id"]);
         $gymmngr->set_session_id($_POST["session_id"]);
         $gymmngr->set_session_date($_POST["date"]);
-        $gymmngr->set_session_type($_POST["type"]);
+        $gymmngr->set_session_type($_POST["training_type"]);
         $gymmngr->set_comments($_POST["comments"]);
 
         if ($gymmngr->log_session()){ echo 'ok'; } else { echo 'error'; }
         
+        break;
+        
+    case "get_client_active_contracts":
+        $contracts = $gymmngr->get_active_contracts_for_client($_POST["client_id"]);
+        $contracts_json = json_encode($contracts);
+        echo $contracts_json;
         break;
     
 }

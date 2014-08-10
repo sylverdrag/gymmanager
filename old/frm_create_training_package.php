@@ -22,6 +22,18 @@
                     </div>
                     <div class="entry">
                         <label class="lbl_regular" style="">
+                            Type*</label>
+                        <select size="1" name="type" class="entryField">
+                            <option value="Pilates">Pilates</option>
+                            <option value="Boxing">Boxing</option>
+                            <option value="Yoga">Yoga</option>
+                            <option value="TRX">TRX</option>
+                            <option value="Body weight">Body weight training</option>
+                            <option value="other">Other</option>
+                        </select> 
+                    </div>
+                    <div class="entry">
+                        <label class="lbl_regular" style="">
                             Nb sessions*</label>
                         <input type="text" size="38" maxlength="50" name="nb_sessions" value="" class="entryField"/> 
                     </div>

@@ -187,7 +187,7 @@ else
 {
     echo ' is broken.<br>';
 }
-// var_dump($contracts);
+ var_dump($contracts);
 
 ## test 11: get the list of active trainers
 echo '<b># test 11 # $gymmngr->get_trainer_list()</b>';
