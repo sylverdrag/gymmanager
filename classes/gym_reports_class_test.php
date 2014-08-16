@@ -62,6 +62,20 @@ else
     echo ' is broken.<br>';
 }
 
+## test 3: 
+echo '<b># test 3 # $gym_reports->calculate_VSD()</b>';
+$from = "2014-07-01";
+$to = "2014-08-31";
+$vsd = $gym_reports->calculate_VSD($from, $to);
+if ($vsd !== false)
+{
+    $vsd = "THB " . number_format($vsd);
+    echo ' is working properly. GI: '. $vsd .'<br>';
+}
+else
+{
+    echo ' is broken.<br>';
+}
 
 
 

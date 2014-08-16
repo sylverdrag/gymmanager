@@ -86,6 +86,7 @@ class gym_reports_class
     /*
      * Calculate the GI from a from date to a to date, inclusive, 
      * based on the contracts' creation date. The assumption here is that contracts are always paid when they are entered in the computer.
+     * Returns the GI as a non formatted numerical string.
      */
     function calculate_GI($from_date, $to_date)
     {
@@ -116,8 +117,46 @@ class gym_reports_class
     }
 
     /*
-     * Calculate the GI from a from date to a to date, inclusive, 
-     * based on the contracts' creation date. The assumption here is that contracts are always paid when they are entered in the computer.
+     * Calculate the VSD from a from date to a to date, inclusive, 
+     * based on the sessions date. 
+     * Returns the GI as a non formatted numerical string.
+     */
+    function calculate_VSD($from_date, $to_date)
+    {
+        try {
+            $stmt = $this->connect->prepare("/* Calculates the GI since a specific date */
+                    SELECT  
+                        SUM(contracts.price_per_session) AS 'VSD'
+                    FROM 
+                        sylver_gymmngr.sessions
+                    JOIN 
+                        sylver_gymmngr.contracts
+                    ON 
+                        sessions.contract_id = contracts.contract_id
+                    WHERE
+                        DATE(sessions.date) >= DATE(:from_date) AND
+                        DATE(sessions.date) <= DATE(:to_date)
+                    ;");
+            $stmt->bindParam(':from_date', $from_date);
+            $stmt->bindParam(':to_date', $to_date);
+            if ($stmt->execute())
+            {
+                return $stmt->fetch()["VSD"];
+            }
+            else 
+            {
+                return false;
+            }
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+
+    /*
+     * List contracts sold over a period and the name of the clients who bought them. Accepts a limit variable.
+     * Returns an array containing the date of the contract, the full name of the client, the contract ID, 
+     * the total value of the contract and the type of training.
      */
     function get_sales($from_date, $to_date, $limit)
     {
