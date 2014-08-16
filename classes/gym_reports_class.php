@@ -193,19 +193,470 @@ class gym_reports_class
         }
     }
     
-### Formatting results ###
-    function results_to_table ($results_array, $report_name, $caption = "")
+    /*
+     * List active contracts for a specific client.
+     * Returns an array 
+     */
+    function get_active_contracts_for_client($client_id, $limit)
     {
-        $table = "<table id='". $report_name ."' class='tbl_report'>\n
+        try {
+                $stmt = $this->connect->prepare("/* List active contracts for a specific client */
+                        SELECT
+                            CONCAT(sylver_gymmngr.clients.first_name, ' ', sylver_gymmngr.clients.last_name) AS 'Name',
+                            contract_id AS 'Contract ID', 
+                            training_type AS 'Type',
+                            nb_sessions AS 'Total Sessions',
+                            nb_sessions - remaining_sessions AS 'Sessions done',
+                            remaining_sessions AS 'Sessions remaining',
+                            nb_sessions * price_per_session AS 'Total Price',
+                            DATE(expire_date) AS 'Expires on...'
+                        FROM 
+                            sylver_gymmngr.contracts
+                        JOIN 
+                            sylver_gymmngr.clients ON sylver_gymmngr.contracts.client_id = sylver_gymmngr.clients.client_id
+                        WHERE
+                            sylver_gymmngr.contracts.client_id = :client_id AND
+                            remaining_sessions > 0 AND
+                            DATE(expire_date) > DATE(now())
+                        ORDER BY expire_date ASC
+                        $limit
+                        ;");
+            $stmt->bindParam(':client_id', $client_id);
+            if ($stmt->execute())
+            {
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+            else 
+            {
+                return false;
+            }
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+    
+    /*
+     * List all contracts ever purchased by a specific client.
+     * Returns an array 
+     */
+    function get_all_contracts_for_client($client_id, $limit)
+    {
+        try {
+                $stmt = $this->connect->prepare("/* List all contracts for a specific client */
+                        SELECT
+                            CONCAT(sylver_gymmngr.clients.first_name, ' ', sylver_gymmngr.clients.last_name) AS 'Name',
+                            DATE(creation_date) AS 'Date',
+                            contract_id AS 'Contract ID', 
+                            training_type AS 'Type',
+                            nb_sessions AS 'Total Sessions',
+                            nb_sessions - remaining_sessions AS 'Sessions done',
+                            remaining_sessions AS 'Sessions remaining',
+                            nb_sessions * price_per_session AS 'Total Price',
+                            DATE(expire_date) AS 'Expires on...'
+                        FROM 
+                            sylver_gymmngr.contracts
+                        JOIN 
+                            sylver_gymmngr.clients ON sylver_gymmngr.contracts.client_id = sylver_gymmngr.clients.client_id
+                        WHERE
+                            sylver_gymmngr.contracts.client_id = :client_id 
+                        ORDER BY creation_date ASC
+                        $limit
+                        ;");
+            $stmt->bindParam(':client_id', $client_id);
+            if ($stmt->execute())
+            {
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+            else 
+            {
+                return false;
+            }
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+
+    /*
+     * List active contracts for a specific client.
+     * Returns an array 
+     */
+    function get_all_sales_by_client($limit)
+    {
+        try {
+                $stmt = $this->connect->prepare("/* List total purchases for clients */
+                        SELECT  
+                            sylver_gymmngr.contracts.creation_date AS 'Date',
+                            CONCAT (sylver_gymmngr.clients.first_name, ' ', sylver_gymmngr.clients.last_name) AS 'Client',
+                            SUM(nb_sessions * price_per_session) AS 'Total',
+                            ' THB' AS 'Currency',
+                            training_type AS 'Training type'
+                        FROM 
+                            sylver_gymmngr.contracts
+                        JOIN sylver_gymmngr.clients
+                        ON sylver_gymmngr.clients.client_id = sylver_gymmngr.contracts.client_id
+                        GROUP BY sylver_gymmngr.clients.client_id
+                        ORDER BY SUM(nb_sessions * price_per_session) DESC
+                        $limit
+                        ;");
+            if ($stmt->execute())
+            {
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+            else 
+            {
+                return false;
+            }
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+
+    function clients_sessions_in_period($from_date, $to_date, $limit)
+    {
+        try {
+                $stmt = $this->connect->prepare("/* List clients session in the period given */
+                        SELECT 
+                            sylver_gymmngr.sessions.`date` AS 'Date',
+                            CONCAT(sylver_gymmngr.clients.first_name, ' ', sylver_gymmngr.clients.last_name) AS 'Client',
+                            CONCAT(sylver_gymmngr.contracts.training_type, ' (', sylver_gymmngr.contracts.remaining_sessions, ')') AS 'Contract',
+                            CONCAT(sylver_gymmngr.trainers.first_name, ' ', sylver_gymmngr.trainers.last_name) AS 'Trainer'
+
+                        FROM
+                            sylver_gymmngr.clients
+                        JOIN sylver_gymmngr.sessions ON sylver_gymmngr.sessions.client_id = sylver_gymmngr.clients.client_id
+                        JOIN sylver_gymmngr.contracts ON sylver_gymmngr.sessions.contract_id = sylver_gymmngr.contracts.contract_id
+                        JOIN sylver_gymmngr.trainers ON sylver_gymmngr.sessions.trainer_id = sylver_gymmngr.trainers.trainer_id
+                        WHERE
+                            DATE(sessions.date) >= DATE(:from_date) AND
+                            DATE(sessions.date) <= DATE(:to_date)
+                        ORDER BY sylver_gymmngr.sessions.`date` ASC
+                        $limit
+                        ;");
+            $stmt->bindParam(':from_date', $from_date);
+            $stmt->bindParam(':to_date', $to_date);
+            if ($stmt->execute())
+            {
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+            else 
+            {
+                return false;
+            }
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+    
+    /*
+     * Calculate the number of sessions done from a from date to a to date, inclusive, 
+     * Returns the number of sessions.
+     */
+    function get_nb_sessions_in_period($from_date, $to_date)
+    {
+        try {
+            $stmt = $this->connect->prepare("/* Calculates the GI since a specific date */
+                    SELECT  
+                        count(session_id) AS 'Sessions'
+                    FROM 
+                        sylver_gymmngr.sessions
+                    WHERE
+                        DATE(sessions.date) >= DATE(:from_date) AND
+                        DATE(sessions.date) <= DATE(:to_date)
+                    ;");
+            $stmt->bindParam(':from_date', $from_date);
+            $stmt->bindParam(':to_date', $to_date);
+            if ($stmt->execute())
+            {
+                return $stmt->fetch()["Sessions"];
+            }
+            else 
+            {
+                return false;
+            }
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+
+    /*
+     * List all sessions given by a specific trainer during a time period
+     * RETURNS: Array
+     */
+    function trainer_activity_in_period($trainer_id, $from_date, $to_date, $limit)
+    {
+        try {
+                $stmt = $this->connect->prepare("/* List activity in the period given for a specific trainer */
+                        SELECT 
+                            sylver_gymmngr.sessions.`date` AS 'Date', 
+                            CONCAT(sylver_gymmngr.trainers.first_name, ' ', sylver_gymmngr.trainers.last_name) AS 'Trainer',
+                            sylver_gymmngr.sessions.`type` AS 'Training type',
+                            CONCAT(sylver_gymmngr.clients.first_name, ' ', sylver_gymmngr.clients.last_name) AS 'Client',
+                            CASE
+                                WHEN sylver_gymmngr.sessions.`type` = 'Pilates'
+                                    THEN sylver_gymmngr.trainers.pilates_rate
+                                WHEN sylver_gymmngr.sessions.`type` = 'TRX'
+                                    THEN sylver_gymmngr.trainers.trx_rate
+                                WHEN sylver_gymmngr.sessions.`type` = 'Boxing'
+                                    THEN sylver_gymmngr.trainers.boxing_rate
+                                WHEN sylver_gymmngr.sessions.`type` = 'Bodyweight'
+                                    THEN sylver_gymmngr.trainers.bodyweight_rate
+                                WHEN sylver_gymmngr.sessions.`type` = 'Yoga'
+                                    THEN sylver_gymmngr.trainers.yoga_rate
+                            END AS 'Training rate',
+                            sylver_gymmngr.contracts.trainer_rate_modifier AS 'Premium',
+                            CASE
+                                WHEN sylver_gymmngr.sessions.`type` = 'Pilates'
+                                    THEN sylver_gymmngr.trainers.pilates_rate + sylver_gymmngr.contracts.trainer_rate_modifier
+                                WHEN sylver_gymmngr.sessions.`type` = 'TRX'
+                                    THEN sylver_gymmngr.trainers.trx_rate + sylver_gymmngr.contracts.trainer_rate_modifier
+                                WHEN sylver_gymmngr.sessions.`type` = 'Boxing'
+                                    THEN sylver_gymmngr.trainers.boxing_rate + sylver_gymmngr.contracts.trainer_rate_modifier
+                                WHEN sylver_gymmngr.sessions.`type` = 'Bodyweight'
+                                    THEN sylver_gymmngr.trainers.bodyweight_rate + sylver_gymmngr.contracts.trainer_rate_modifier
+                                WHEN sylver_gymmngr.sessions.`type` = 'Yoga'
+                                    THEN sylver_gymmngr.trainers.yoga_rate + sylver_gymmngr.contracts.trainer_rate_modifier
+                            END AS 'Total'
+                        FROM 
+                            sylver_gymmngr.sessions
+                        JOIN
+                            sylver_gymmngr.trainers ON sylver_gymmngr.sessions.trainer_id = sylver_gymmngr.trainers.trainer_id
+                        JOIN
+                            sylver_gymmngr.clients ON sylver_gymmngr.sessions.client_id = sylver_gymmngr.clients.client_id
+                        JOIN
+                            sylver_gymmngr.contracts ON sylver_gymmngr.sessions.contract_id = sylver_gymmngr.contracts.contract_id
+                        WHERE
+                            DATE(sessions.date) >= DATE(:from_date) AND
+                            DATE(sessions.date) <= DATE(:to_date) AND
+                            sylver_gymmngr.trainers.trainer_id = :trainer_id
+                        ORDER BY sylver_gymmngr.sessions.`date`
+                        $limit
+                        ;");
+            $stmt->bindParam(':trainer_id', $trainer_id);
+            $stmt->bindParam(':from_date', $from_date);
+            $stmt->bindParam(':to_date', $to_date);
+            if ($stmt->execute())
+            {
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+            else 
+            {
+                return false;
+            }
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+    
+    /*
+     * Calculate the fees of a specific trainer from a from date to a to date, inclusive, 
+     * Returns the number of sessions.
+     */
+    function calculate_trainer_fees($trainer_id, $from_date, $to_date)
+    {
+        try {
+            $stmt = $this->connect->prepare("/* Calculate the fees of a specific trainer for the given period */
+                    SELECT 
+                        SUM(
+                        CASE
+                            WHEN sylver_gymmngr.sessions.`type` = 'Pilates'
+                                THEN sylver_gymmngr.trainers.pilates_rate + sylver_gymmngr.contracts.trainer_rate_modifier
+                            WHEN sylver_gymmngr.sessions.`type` = 'TRX'
+                                THEN sylver_gymmngr.trainers.trx_rate + sylver_gymmngr.contracts.trainer_rate_modifier
+                            WHEN sylver_gymmngr.sessions.`type` = 'Boxing'
+                                THEN sylver_gymmngr.trainers.boxing_rate + sylver_gymmngr.contracts.trainer_rate_modifier
+                            WHEN sylver_gymmngr.sessions.`type` = 'Bodyweight'
+                                THEN sylver_gymmngr.trainers.bodyweight_rate + sylver_gymmngr.contracts.trainer_rate_modifier
+                            WHEN sylver_gymmngr.sessions.`type` = 'Yoga'
+                                THEN sylver_gymmngr.trainers.yoga_rate + sylver_gymmngr.contracts.trainer_rate_modifier
+                        END) AS 'Fee'
+
+                    FROM 
+                        sylver_gymmngr.sessions
+                    JOIN
+                        sylver_gymmngr.trainers ON sylver_gymmngr.sessions.trainer_id = sylver_gymmngr.trainers.trainer_id
+                    JOIN
+                        sylver_gymmngr.contracts ON sylver_gymmngr.sessions.contract_id = sylver_gymmngr.contracts.contract_id
+                    WHERE
+                        DATE(sessions.date) >= DATE(:from_date) AND
+                        DATE(sessions.date) <= DATE(:to_date) AND
+                        sylver_gymmngr.trainers.trainer_id = :trainer_id
+                    ;");
+            $stmt->bindParam(':trainer_id', $trainer_id);
+            $stmt->bindParam(':from_date', $from_date);
+            $stmt->bindParam(':to_date', $to_date);
+            if ($stmt->execute())
+            {
+                $result = $stmt->fetch();
+                return $result["Fee"];
+            }
+            else 
+            {
+                return false;
+            }
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+
+    /*
+     * List all sessions given by all trainer during a time period
+     * RETURNS: Array
+     */
+    function all_trainer_activity_in_period($from_date, $to_date, $limit)
+    {
+        try {
+                $stmt = $this->connect->prepare("/* List activity in the period given for all trainers */
+                        SELECT 
+                            sylver_gymmngr.sessions.`date` AS 'Date', 
+                            CONCAT(sylver_gymmngr.trainers.first_name, ' ', sylver_gymmngr.trainers.last_name) AS 'Trainer',
+                          /*  sylver_gymmngr.sessions.contract_id AS 'Contract ID', */
+                            sylver_gymmngr.sessions.`type` AS 'Training type',
+                            CONCAT(sylver_gymmngr.clients.first_name, ' ', sylver_gymmngr.clients.last_name) AS 'Client',
+                            CASE
+                                WHEN sylver_gymmngr.sessions.`type` = 'Pilates'
+                                    THEN sylver_gymmngr.trainers.pilates_rate
+                                WHEN sylver_gymmngr.sessions.`type` = 'TRX'
+                                    THEN sylver_gymmngr.trainers.trx_rate
+                                WHEN sylver_gymmngr.sessions.`type` = 'Boxing'
+                                    THEN sylver_gymmngr.trainers.boxing_rate
+                                WHEN sylver_gymmngr.sessions.`type` = 'Bodyweight'
+                                    THEN sylver_gymmngr.trainers.bodyweight_rate
+                                WHEN sylver_gymmngr.sessions.`type` = 'Yoga'
+                                    THEN sylver_gymmngr.trainers.yoga_rate
+                            END AS 'Training rate',
+                            sylver_gymmngr.contracts.trainer_rate_modifier AS 'Premium',
+                            CASE
+                                WHEN sylver_gymmngr.sessions.`type` = 'Pilates'
+                                    THEN sylver_gymmngr.trainers.pilates_rate + sylver_gymmngr.contracts.trainer_rate_modifier
+                                WHEN sylver_gymmngr.sessions.`type` = 'TRX'
+                                    THEN sylver_gymmngr.trainers.trx_rate + sylver_gymmngr.contracts.trainer_rate_modifier
+                                WHEN sylver_gymmngr.sessions.`type` = 'Boxing'
+                                    THEN sylver_gymmngr.trainers.boxing_rate + sylver_gymmngr.contracts.trainer_rate_modifier
+                                WHEN sylver_gymmngr.sessions.`type` = 'Bodyweight'
+                                    THEN sylver_gymmngr.trainers.bodyweight_rate + sylver_gymmngr.contracts.trainer_rate_modifier
+                                WHEN sylver_gymmngr.sessions.`type` = 'Yoga'
+                                    THEN sylver_gymmngr.trainers.yoga_rate + sylver_gymmngr.contracts.trainer_rate_modifier
+                            END AS 'Total'
+                        FROM 
+                            sylver_gymmngr.sessions
+                        JOIN
+                            sylver_gymmngr.trainers ON sylver_gymmngr.sessions.trainer_id = sylver_gymmngr.trainers.trainer_id
+                        JOIN
+                            sylver_gymmngr.clients ON sylver_gymmngr.sessions.client_id = sylver_gymmngr.clients.client_id
+                        JOIN
+                            sylver_gymmngr.contracts ON sylver_gymmngr.sessions.contract_id = sylver_gymmngr.contracts.contract_id
+                        WHERE
+                            DATE(sessions.date) >= DATE(:from_date) AND
+                            DATE(sessions.date) <= DATE(:to_date)
+                        ORDER BY sylver_gymmngr.sessions.`date`
+                        $limit
+                        ;");
+            $stmt->bindParam(':from_date', $from_date);
+            $stmt->bindParam(':to_date', $to_date);
+            if ($stmt->execute())
+            {
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+            else 
+            {
+                return false;
+            }
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+    
+    /*
+     * Calculate the total fee of all trainers from a from date to a to date, inclusive. 
+     * (When taken out of the GI, gives the raw profit -not accounting for other running expenses)
+     * Returns the number of sessions.
+     */
+    function calculate_total_trainer_fees($from_date, $to_date)
+    {
+        try {
+            $stmt = $this->connect->prepare("
+                    /* Computes the total fees for all trainers. 
+                     * Important: if Vinus has a fee as a trainer, her fees will be added to this total - The easiest work-around is to put her rate as '0'. 
+                     * This might conflict if the contract specifies a trainer premium (test and figure out if it needs to be taken into account)
+                     */
+                    SELECT 
+                        SUM(
+                            CASE
+                                WHEN sylver_gymmngr.sessions.`type` = 'Pilates'
+                                    THEN sylver_gymmngr.trainers.pilates_rate + sylver_gymmngr.contracts.trainer_rate_modifier
+                                WHEN sylver_gymmngr.sessions.`type` = 'TRX'
+                                    THEN sylver_gymmngr.trainers.trx_rate + sylver_gymmngr.contracts.trainer_rate_modifier
+                                WHEN sylver_gymmngr.sessions.`type` = 'Boxing'
+                                    THEN sylver_gymmngr.trainers.boxing_rate + sylver_gymmngr.contracts.trainer_rate_modifier
+                                WHEN sylver_gymmngr.sessions.`type` = 'Bodyweight'
+                                    THEN sylver_gymmngr.trainers.bodyweight_rate + sylver_gymmngr.contracts.trainer_rate_modifier
+                                WHEN sylver_gymmngr.sessions.`type` = 'Yoga'
+                                    THEN sylver_gymmngr.trainers.yoga_rate + sylver_gymmngr.contracts.trainer_rate_modifier
+                            END
+                        ) AS 'Total'
+
+                    FROM 
+                        sylver_gymmngr.sessions
+                    JOIN
+                        sylver_gymmngr.trainers ON sylver_gymmngr.sessions.trainer_id = sylver_gymmngr.trainers.trainer_id
+                    JOIN
+                        sylver_gymmngr.contracts ON sylver_gymmngr.sessions.contract_id = sylver_gymmngr.contracts.contract_id
+                    WHERE
+                        DATE(sessions.date) >= DATE(:from_date) AND
+                        DATE(sessions.date) <= DATE(:to_date)
+                    ;");
+            $stmt->bindParam(':from_date', $from_date);
+            $stmt->bindParam(':to_date', $to_date);
+            if ($stmt->execute())
+            {
+                $result = $stmt->fetch();
+                return $result["Total"];
+            }
+            else 
+            {
+                return false;
+            }
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+
+
+    
+    
+### Formatting results ###
+    /*
+     * Format a result set in a table.
+     * $caption sets the table's caption
+     * $ignore_cols is an array of columns to ignore from the result set 
+     * (This is used when a specific column data should be hidden from the table, but is used somewhere else - 
+     * ex: when getting the contracts of a client, the client name is required for the title, but there is no point putting it in the result table.)
+     * RETURNS: HTML Table with the result set and all classes/IDs necessary for proper formatting.
+     * TODO: Enable further processing (like sorting, filtering, etc.)
+     */
+    function results_to_table ($results_array, $report_name, $caption = "", $ignore_cols = "")
+    {
+        $table = "<table id='". $report_name ."' class='tbl_report' cellspacing='0'>\n
                     <thead>\n
                         <tr>\n";
         $table_headers = "";
         if (is_array($results_array[0]))
         {
-            
             foreach ($results_array[0] as $key => $value)
             {
-                $table_headers .= "<td id='$key' class='tbl_header_cell'>" . $key . "</td>\n";
+                if (!in_array($key, $ignore_cols))
+                {
+                    $table_headers .= "<td id='$key' class='tbl_header_cell'>" . $key . "</td>\n";
+                }
             }
             $table .= $table_headers . "</tr>\n</thead>\n<tbody>\n";
             for ($i = 0; $i < count($results_array); $i++)
@@ -213,13 +664,16 @@ class gym_reports_class
                 $table_rows .= "<tr>\n";
                 foreach ($results_array[$i] as $key => $value)
                 {
-                    if ($i%2 == 0)
+                    if (!in_array($key, $ignore_cols)) 
                     {
-                        $row .= "<td class='$key tbl_data_cell_even'>" . $value . "</td>";
-                    }
-                    else 
-                    {
-                        $row .= "<td class='$key tbl_data_cell_odd'>" . $value . "</td>";
+                        if ($i%2 == 0)
+                        {
+                            $row .= "<td class='$key tbl_data_cell_even'>" . $value . "</td>";
+                        }
+                        else 
+                        {
+                            $row .= "<td class='$key tbl_data_cell_odd'>" . $value . "</td>";
+                        }
                     }
                 }
                 $table_rows .= $row . "\n</tr>\n";

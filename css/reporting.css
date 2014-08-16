@@ -23,3 +23,16 @@ html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote, 
     padding: 5px; 
     border: 1px solid;
 }
+.tbl_report td
+{
+    margin: 0;
+}
+.tbl_data_cell_even
+{
+    background-color: rgba(249, 124, 19, 0.68);
+    padding: 2px 5px;
+}
+.tbl_data_cell_odd
+{
+    padding: 2px 5px;
+}
