@@ -1,0 +1,25 @@
+/*
+    Copyright Sylvain Galibert 2014
+    Created on : August 3, 2014, 11:29:08 PM
+*/
+
+/* RESET */
+html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote, pre, form, fieldset, table, th, td,  input, select, textarea
+{
+    margin: 0;
+    padding: 0;
+    /* forcing the box model to follow the given sizes 
+     * and accommodate margin and paddings within that space
+     */
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;    
+}
+
+.tbl_report
+{
+    width: 90%; 
+    margin: 10px auto; 
+    padding: 5px; 
+    border: 1px solid;
+}

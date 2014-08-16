@@ -1,7 +1,8 @@
+/* List contracts sold over a period and the name of the clients who bought them */
 SELECT  
-    sylver_gymmngr.contracts.creation_date AS "Date",
+    CONCAT (DATE(sylver_gymmngr.contracts.creation_date), " ",TIME(sylver_gymmngr.contracts.creation_date)) AS "Date",
     CONCAT (sylver_gymmngr.clients.first_name, " ", sylver_gymmngr.clients.last_name) AS "Client",
-    sylver_gymmngr.contracts.contract_id AS "Contract_ID",
+    sylver_gymmngr.contracts.contract_id AS "Contract ID",
     nb_sessions * price_per_session AS "Amount",
     training_type AS "Training type"
 FROM 
