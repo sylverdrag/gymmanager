@@ -9,14 +9,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google" value="notranslate" />
     
-    <link rel="stylesheet" type="text/css" href="css/basic.css?<?php echo date("c"); ?>" media="screen" />
+    <link rel="stylesheet" type="text/css" href="css/basic_01.css?<?php echo date("c"); ?>" media="screen" />
     <link rel="stylesheet" type="text/css" href="<?= ROOT_PATH ?><?= $extra ?>" media="screen" />
     <link href="css/jquery-ui-1.10.3.custom.min.css" rel="stylesheet">
 </head>
 <body>
     <div id="header">
         <div id="logo">
-            <h2>Gym Manager</h2>
+            <h2><a href="index.php?pge=dashboard">Gym Manager</a></h2>
         </div>
         <div id="mnu_header">
             <?= $mnu_header; ?>

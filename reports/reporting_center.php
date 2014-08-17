@@ -20,8 +20,10 @@ ob_start();
 ?>
 <div id="page">
     <h1 class="formTitle">Reporting center</h1>
+    
     <h2>Key reports...</h2>
     <ul id="lks_reports">
+        <li><a href='index.php?pge=dashboard'>Dashboard</a></li>
         <li><a href='index.php?pge=reports/sales_overview'>Sales overview</a></li>
         <li><a href='index.php?pge=reports/client_summary'>Client overview</a></li>
         <li><a href='index.php?pge=reports/client_activity'>Client activity</a></li>

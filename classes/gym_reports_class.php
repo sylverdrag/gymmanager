@@ -166,7 +166,7 @@ class gym_reports_class
                             CONCAT (DATE(sylver_gymmngr.contracts.creation_date), ' ' ,TIME(sylver_gymmngr.contracts.creation_date)) AS 'Date',
                             CONCAT (sylver_gymmngr.clients.first_name, ' ', sylver_gymmngr.clients.last_name) AS 'Client',
                             sylver_gymmngr.contracts.contract_id AS 'Contract ID',
-                            nb_sessions * price_per_session AS 'Amount',
+                            FORMAT(nb_sessions * price_per_session, 0) AS 'THB',
                             training_type AS 'Training type'
                         FROM 
                             sylver_gymmngr.contracts
@@ -179,6 +179,52 @@ class gym_reports_class
                         ;");
             $stmt->bindParam(':from_date', $from_date);
             $stmt->bindParam(':to_date', $to_date);
+            if ($stmt->execute())
+            {
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+            else 
+            {
+                return false;
+            }
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+    
+    /*
+     * List contracts sold over a period and the name of the clients who bought them. Accepts a limit variable.
+     * Returns an array containing the date of the contract, the full name of the client, the contract ID, 
+     * the total value of the contract and the type of training.
+     */
+    function get_sales_by_branch($from_date, $to_date, $branch, $limit)
+    {
+        if ($branch === "all")
+        {
+            $branch = "%" ;
+        }
+        try {
+                $stmt = $this->connect->prepare("/* List contracts sold over a period and the name of the clients who bought them */
+                        SELECT  
+                            CONCAT (DATE(sylver_gymmngr.contracts.creation_date), ' ' ,TIME(sylver_gymmngr.contracts.creation_date)) AS 'Date',
+                            CONCAT (sylver_gymmngr.clients.first_name, ' ', sylver_gymmngr.clients.last_name) AS 'Client',
+                            sylver_gymmngr.contracts.branch AS 'Branch',
+                            FORMAT(nb_sessions * price_per_session, 0) AS 'THB',
+                            training_type AS 'Training type'
+                        FROM 
+                            sylver_gymmngr.contracts
+                        JOIN sylver_gymmngr.clients
+                        ON sylver_gymmngr.clients.client_id = sylver_gymmngr.contracts.client_id
+                        WHERE
+                            creation_date >= DATE(:from_date) AND
+                            creation_date <= DATE(:to_date) AND
+                            branch LIKE :branch
+                        $limit
+                        ;");
+            $stmt->bindParam(':from_date', $from_date);
+            $stmt->bindParam(':to_date', $to_date);
+            $stmt->bindParam(':branch', $branch);
             if ($stmt->execute())
             {
                 return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -208,7 +254,7 @@ class gym_reports_class
                             nb_sessions AS 'Total Sessions',
                             nb_sessions - remaining_sessions AS 'Sessions done',
                             remaining_sessions AS 'Sessions remaining',
-                            nb_sessions * price_per_session AS 'Total Price',
+                            FORMAT(nb_sessions * price_per_session, 0) AS 'Total Price',
                             DATE(expire_date) AS 'Expires on...'
                         FROM 
                             sylver_gymmngr.contracts
@@ -252,7 +298,7 @@ class gym_reports_class
                             nb_sessions AS 'Total Sessions',
                             nb_sessions - remaining_sessions AS 'Sessions done',
                             remaining_sessions AS 'Sessions remaining',
-                            nb_sessions * price_per_session AS 'Total Price',
+                            FORMAT(nb_sessions * price_per_session,0) AS 'Total Price',
                             DATE(expire_date) AS 'Expires on...'
                         FROM 
                             sylver_gymmngr.contracts
@@ -289,8 +335,7 @@ class gym_reports_class
                         SELECT  
                             sylver_gymmngr.contracts.creation_date AS 'Date',
                             CONCAT (sylver_gymmngr.clients.first_name, ' ', sylver_gymmngr.clients.last_name) AS 'Client',
-                            SUM(nb_sessions * price_per_session) AS 'Total',
-                            ' THB' AS 'Currency',
+                            FORMAT(SUM(nb_sessions * price_per_session),0) AS 'Total',
                             training_type AS 'Training type'
                         FROM 
                             sylver_gymmngr.contracts

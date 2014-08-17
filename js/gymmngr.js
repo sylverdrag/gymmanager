@@ -69,6 +69,46 @@ function get_contracts_for_client(client_id)
 }
 
 
+function handle_form()
+{   
+    var form_purpose        = $("#formPurpose").val();
+    var return_page         = $('#return_page').val();
+    var mandatory_fields    = $("#mandatory").val();
+    var form_data           = "";
+    $(".entryField").each(function() {
+        form_data += this.id + "=" + this.value + "&";
+    });
+    
+    $.ajax
+    ({
+        async: true,
+        url: 'handlers/gymHandler.php',
+        type: 'POST',
+        data: form_data + "formPurpose=" + form_purpose,
+        dataType: "text",
+        success: function(result)
+        {
+            if (result === "ok")
+            {
+                alert(form_purpose + ": OK");
+                window.location.replace(return_page);
+            }
+            else
+            {
+                alert(form_purpose + 'An error occured. Please contact the webmaster');
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown)
+        {
+            // Debugging error message. Add error handling later
+            console.log(JSON.stringify(XMLHttpRequest));
+            console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+        }
+    });
+    
+    return false;
+}
+
 
 $( window ).load(function(){
     // Get package data and fill out the package details in the form when a package is selected.
@@ -125,7 +165,38 @@ $( window ).load(function(){
        var contract_type = $('#contract_id option:selected').attr("title");
        $('#training_type').val(contract_type);
     });
-//    end of $(document).ready
+    
+    $(".submit_form_data").click(function(){
+        handle_form();
+    });
+    
+    $('#bt_update_dashboard').click(function(){
+        var start_date  = $("#from_date").val();
+        var end_date    = $("#to_date").val();
+        window.location.replace("index.php?pge=dashboard&start_date=" + 
+                                start_date +
+                                "&end_date=" +
+                                end_date
+                                );
+
+    });
+
+    $('#bt_display_sales').click(function(){
+        var start_date  = $("#from_date").val();
+        var end_date    = $("#to_date").val();
+        var branch      = $("#branch").val();
+        window.location.replace("index.php?pge=reports/sales_overview&start_date=" + 
+                                start_date +
+                                "&end_date=" +
+                                end_date +
+                                "&branch=" +
+                                branch
+                                );
+
+    });
+    
+    
+    //    end of $(document).ready
 });//
 
 

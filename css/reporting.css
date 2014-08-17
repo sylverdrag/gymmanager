@@ -36,3 +36,27 @@ html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote, 
 {
     padding: 2px 5px;
 }
+.THB
+{
+    text-align: right;
+    padding-right: 15px;
+}
+#report_area
+{
+    min-width: 250px;
+    width: 100%;
+    margin:1%;
+    padding: 10px;
+    border: 3px darkred groove;
+    -webkit-border-radius: 20px 20px 20px 20px;
+    -moz-border-radius: 20px 20px 20px 20px;
+    border-radius: 20px 20px 20px 20px; 
+    background-color: white;
+    max-height: 1000px;
+    overflow-y: auto;
+
+}
+#report_area h2
+{
+    text-align: center;
+}

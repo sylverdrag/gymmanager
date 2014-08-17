@@ -49,7 +49,7 @@ else
 echo '<b># test 2 # $gym_reports->get_sales($from, $to)</b>';
 $from = "2014-07-01";
 $to = "2014-08-31";
-$limit = "LIMIT 3";
+$limit = "LIMIT 10";
 $ignore_cols = array();
 $sales = $gym_reports->get_sales($from, $to, $limit);
 if ($sales !== false)
@@ -63,6 +63,26 @@ else
     echo ' is broken.<br>';
 }
 
+## test 2b: 
+echo '<b># test 2 # $gym_reports->get_sales_by_branch($from, $to)</b>';
+$from = "2014-07-01";
+$to = "2014-08-31";
+$branch = "all";
+$limit = "LIMIT 10";
+$ignore_cols = array();
+$sales = $gym_reports->get_sales_by_branch($from, $to, $branch, $limit);
+if ($sales !== false)
+{
+    echo ' is working properly. Data: <br>';
+   // var_dump($sales);
+    echo $gym_reports->results_to_table($sales, "Sales", "Sales report from " . $from . " to ". $to, $ignore_cols);
+}
+else
+{
+    echo ' is broken.<br>';
+}
+
+
 ## test 3: 
 echo '<b># test 3 # $gym_reports->calculate_VSD()</b>';
 $from = "2014-07-01";
@@ -71,7 +91,7 @@ $vsd = $gym_reports->calculate_VSD($from, $to);
 if ($vsd !== false)
 {
     $vsd = "THB " . number_format($vsd);
-    echo ' is working properly. GI: '. $vsd .'<br>';
+    echo ' is working properly. VSD: '. $vsd .'<br>';
 }
 else
 {
@@ -150,7 +170,7 @@ else
 }
 
 ## test 8: 
-echo '<b># test 8 # $gym_reports->calculate_GI()</b>';
+echo '<b># test 8 # $gym_reports->get_nb_sessions_in_period($from, $to);</b>';
 $from = "2014-07-01";
 $to = "2014-08-31";
 $nb_sessions = $gym_reports->get_nb_sessions_in_period($from, $to);

@@ -97,7 +97,7 @@ switch ($formPurpose){
         $gymmngr->trainer_create_date = $_POST["created_date"];
 
 
-        if ($gymmngr->create_trainer()){ echo 'ok, trainer created'; } else { echo 'error: Failled to create trainer'; }
+        if ($gymmngr->create_trainer()){ echo 'ok'; } else { echo 'error: Failled to create trainer'; }
         
         break;
 
@@ -111,9 +111,10 @@ switch ($formPurpose){
         $gymmngr->package_discount = $_POST["discount"];
         $gymmngr->package_comments = $_POST["comments"];
 
-        if ($gymmngr->create_package()){ echo 'ok, package created'; } else { echo 'error: Failled to create package'; }
+        if ($gymmngr->create_package()){ echo 'ok'; } else { echo 'error: Failled to create package'; }
         
         break;
+       
         
     case "create_contract":   ###### Creates a new contract ######
         $gymmngr->set_contract_id($_POST["contract_id"]);
@@ -131,7 +132,7 @@ switch ($formPurpose){
         $gymmngr->set_comments($_POST["comments"]);
 
 
-        if ($gymmngr->create_contract()){ echo 'ok, contract created'; } else { echo 'error: Failled to create contract'; }
+        if ($gymmngr->create_contract()){ echo 'ok'; } else { echo 'error: Failled to create contract'; }
         
         break;
         
@@ -156,4 +157,3 @@ switch ($formPurpose){
     
 }
 
- ?>

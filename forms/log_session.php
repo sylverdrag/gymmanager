@@ -39,9 +39,9 @@ $select_trainer = "<select size=\"1\" id=\"trainer_id\" name=\"trainer_id\" clas
 $template = 'templates/tplt_main.php';
 
 # header variables
-$title          = "Login";
+$title          = "Log session";
 $keywords       = "";
-$description    = "Login to the Gym Manager.";
+$description    = "Log a training session.";
 $extra       = "";
 
 
@@ -56,8 +56,9 @@ ob_start();
     <form action="handlers/gymHandler.php" method="POST" enctype="multipart/form-data" class="dataInput" name="AddUser" onSubmit="return confirmSubmit()">
         <div class="formTitle">Log session</div>
         <fieldset class="formFieldSet">
-            <input type='hidden' name='mandatory' value='session_id;date;client_id;contract_id;trainer_id'>
-            <input type="hidden" value="log_session" name="formPurpose" />
+            <input type='hidden' id='mandatory' name='mandatory' value='session_id;date;client_id;contract_id;trainer_id'>
+            <input type="hidden" value="log_session" id="formPurpose" name="formPurpose" />
+            <input type="hidden" value="index.php?pge=forms/log_session" id="return_page" name="return_page" />
 
             <div class="entry">
                 <label class="lbl_regular" style="">
@@ -67,7 +68,7 @@ ob_start();
             <div class="entry">
                 <label class="lbl_regular" style="">
                     Date*</label>
-                <input type="text" size="38" maxlength="50" name="date" value="<?= date("Y-m-d H:m:s"); ?>" class="entryField"/> 
+                <input type="text" size="38" maxlength="50" name="date" id="date" value="<?= date("Y-m-d H:m:s"); ?>" class="entryField"/> 
             </div>
             <div class="entry">
                 <label class="lbl_regular" style="">
@@ -92,9 +93,11 @@ ob_start();
             <div class="entry">
                 <label class="lbl_regular" style="">
                     Comments</label>
-                <textarea cols="35" rows="8" wrap="VIRTUAL" name="comments" class="entryField"></textarea> 
+                <textarea cols="35" rows="8" wrap="VIRTUAL" id="comments" name="comments" class="entryField"></textarea> 
             </div>
-        </fieldset><center><input type="submit" value="Log Session" name="submit" /></center></form> 
+        </fieldset>
+        <noscript><center><input type="submit" value="Log Session" name="submit" /></center></noscript>
+        <div id="bt_log_session" class="bt_green_rounded submit_form_data" style="width: 200px; text-align: center;margin: 10px auto;">Log Session</div></form> 
 
 
 

@@ -21,7 +21,7 @@ for ($i = 0; $i < count($client_list); $i++)
     $client_name =  $client_list[$i]["last_name"] . " " . $client_list[$i]["first_name"];
     $select_client .= "<option value=\"" . $client_list[$i]["client_id"] . "\">" . $client_name . "</option>";
 }
-$select_client = "<select size=\"1\" name=\"client_id\" class=\"entryField\">" . $select_client . "</select>";
+$select_client = "<select size=\"1\" id=\"client_id\" name=\"client_id\" class=\"entryField\">" . $select_client . "</select>";
 
 $packages = $gymmngr->get_packages_list();
 $select_packages = "<option value=''>Select package</option>";
@@ -55,18 +55,19 @@ ob_start();
             <form action="handlers/gymHandler.php" method="POST" enctype="multipart/form-data" class="dataInput" name="create_contract" onSubmit="return confirmSubmit()">
                 <div class="formTitle">Create new contract</div>
                 <fieldset class="formFieldSet">
-                    <input type='hidden' name='mandatory' value='contract_id;client_id;creation_date;training_type;package_id;nb_sessions;price_per_session;start_date;expire_date;remaining_sessions'>
-                    <input type="hidden" value="create_contract" name="formPurpose" />
+                    <input type='hidden' id='mandatory' name='mandatory' value='contract_id;client_id;creation_date;training_type;package_id;nb_sessions;price_per_session;start_date;expire_date;remaining_sessions'>
+                    <input type="hidden" value="create_contract" id="formPurpose" name="formPurpose" />
+                    <input type="hidden" value="index.php?pge=forms/add_contract" id="return_page" name="return_page" />
 
                     <div class="entry">
                         <label class="lbl_regular" style="">
                             Contract id*</label>
-                        <input type="text" size="38" maxlength="15" name="contract_id" value="<?= "ctt_" . date("Ymd_Hms"); ?>" class="entryField" readonly /> 
+                        <input type="text" size="38" maxlength="15" id="contract_id" name="contract_id" value="<?= "ctt_" . date("Ymd_Hms"); ?>" class="entryField" readonly /> 
                     </div>
                     <div class="entry">
                         <label class="lbl_regular" style="">
                             Branch*</label>
-                        <select size="1" name="branch" class="entryField">
+                        <select size="1" id="branch" name="branch" class="entryField">
                             <option value="Punna">Punna</option>
                             <option value="Meechoke">Meechoke</option>
                         </select> 
@@ -122,15 +123,18 @@ ob_start();
                     <div class="entry">
                         <label class="lbl_regular" style="">
                             Trainer rate modifier</label>
-                        <input type="text" size="38" maxlength="50" name="trainer_rate_modifier" value="" class="entryField"/> 
+                        <input type="text" size="38" maxlength="50" id="trainer_rate_modifier" name="trainer_rate_modifier" value="" class="entryField"/> 
                     </div>
                     <div class="entry">
                         <label class="lbl_regular" style="">
                             Comments</label>
-                        <textarea cols="35" rows="8" wrap="VIRTUAL" name="comments" class="entryField"></textarea> 
+                        <textarea cols="35" rows="8" wrap="VIRTUAL" id="comments" name="comments" class="entryField"></textarea> 
                     </div>
-                    <input type="hidden" size="38" maxlength="50" name="creation_date" value="<?= date("Y-m-d H:m:s"); ?>" class="entryField"/> 
-                </fieldset><center><input type="submit" value="Submit" name="submit" /></center></form> 
+                    <input type="hidden" size="38" maxlength="50" id="creation_date" name="creation_date" value="<?= date("Y-m-d H:m:s"); ?>" class="entryField"/> 
+                </fieldset>
+                <noscript><center><input type="submit" value="Submit" name="submit" /></center></noscript>
+                <div id="bt_add_contract" class="bt_green_rounded submit_form_data" style="width: 200px; text-align: center;margin: 10px auto;">Add contract</div>            
+            </form> 
 
         </div>
         
