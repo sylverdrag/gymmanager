@@ -128,6 +128,18 @@ ob_start();
 
 ?>        
     </div>
+
+    <div id="trainers_report" class="dashboard_widget">
+         <h2>Trainers activity</h2>
+<?php
+$ignore_cols = array();
+$all_trainer_activity = $gym_reports->all_trainer_activity_in_period($period_start_date, $period_end_date, $limit);
+echo $gym_reports->results_to_table($all_trainer_activity, 
+                                    "All_Trainer_Activity", 
+                                    "All trainer activity from " . $period_start_date . " to ". $period_end_date, 
+                                    $ignore_cols);
+?>        
+    </div>
     
 </div>
 

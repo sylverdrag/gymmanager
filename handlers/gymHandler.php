@@ -1,20 +1,7 @@
 <?php 
 session_start(); 
 //##-## Check that the query comes from a signed in user with admin rights
-//if($_SESSION["access_admin"]!= "yes"){
-//	echo "Sorry, you are not authorized to perform this operation";
-////	print_r($_SESSION);
-//	die;  
-//}
-//##-## From here on, the user has been verified
-////Check that $_POST["formPurpose"] is set. If not, send the user back 
-//if (!isset($_POST["formPurpose"])){        
-//  $_SESSION["postValues"]= $_POST;
-//  $_SESSION["formErrors"]["nb_error"] = "1 fatal";
-//  $referPage=$_SERVER[""HTTP_REFERER""];
-//  header("location: $referPage");
-//  die;
-//}
+
 
 ##-## Database connection to sylver_gymmngr ##-##  
 include_once('/home/sylver/includes/sylverp.php');

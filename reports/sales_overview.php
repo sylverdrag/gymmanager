@@ -112,6 +112,12 @@ ob_start();
                                         "Sales", 
                                         "Sales report from " . $period_start_date . " to ". $period_end_date, 
                                         $ignore_cols);
+    
+    $sales_by_client = $gym_reports->get_all_sales_by_client("");
+    $ignore_cols = array();
+    $ignore_cols[] = "Date";
+    $ignore_cols[] = "Training type";
+    echo $gym_reports->results_to_table($sales_by_client, "Sales", "Sales by client (All time)", $ignore_cols);
 ?>        
             
     </div>

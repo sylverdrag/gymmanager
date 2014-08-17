@@ -181,6 +181,7 @@ $( window ).load(function(){
 
     });
 
+    // Display sales summary per branch
     $('#bt_display_sales').click(function(){
         var start_date  = $("#from_date").val();
         var end_date    = $("#to_date").val();
@@ -192,9 +193,70 @@ $( window ).load(function(){
                                 "&branch=" +
                                 branch
                                 );
+    });
+    
+    // Displaying a summary of the client's contracts and activities
+    $('#bt_display_client_summary').click(function(){
+        var client_name = $('#client_id option:selected').text();
+        var client_id   = $('#client_id option:selected').val();
+        var action      = "display_client_summary";
+        
+        $.ajax
+        ({
+            async: true,
+            url: 'handlers/gym_reports.php',
+            type: 'POST',
+            data:  "client_name=" + client_name + 
+                   "&client_id=" + client_id +
+                   "&action=" + action,
+            dataType: "text",
+            success: function(result)
+            {
+                $('#report_area').html("<h2>Client summary</h2>" +result);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown)
+            {
+                // Debugging error message. Add error handling later
+                console.log(JSON.stringify(XMLHttpRequest));
+                console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+            }
+        });
 
     });
     
+    // Displaying a summary of the client's contracts and activities
+    $('#bt_display_trainer_summary').click(function(){
+        var trainer_name = $('#trainer_id option:selected').text();
+        var trainer_id   = $('#trainer_id option:selected').val();
+        var from         = $('#from_date').val();
+        var to           = $('#to_date').val();
+        var action      = "display_trainer_summary";
+        
+        $.ajax
+        ({
+            async: true,
+            url: 'handlers/gym_reports.php',
+            type: 'POST',
+            data:  "trainer_name=" + trainer_name + 
+                   "&trainer_id=" + trainer_id +
+                   "&from=" + from +
+                   "&to=" + to +
+                   "&action=" + action,
+            dataType: "text",
+            success: function(result)
+            {
+                $('#report_area').html("<h2>Trainer summary</h2>" + result);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown)
+            {
+                // Debugging error message. Add error handling later
+                console.log(JSON.stringify(XMLHttpRequest));
+                console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+            }
+        });
+
+    });
+        
     
     //    end of $(document).ready
 });//

@@ -135,6 +135,40 @@ else
     echo ' is broken.<br>';
 }
 
+## test 5b: 
+echo '<b># test 5b # $gym_reports->get_all_contracts_for_client($client_id, $limit);</b>';
+$client_id = "clt_20140809_150843";
+$limit = "LIMIT 5";
+$all_sessions = $gym_reports->get_all_sessions_for_client($client_id, $limit);
+if ($all_sessions !== false)
+{
+    echo ' is working properly. Data: <br>';
+    //var_dump($active_contracts);
+    $name = $all_contracts[0]["Name"];
+
+    echo $gym_reports->results_to_table($all_sessions, "Sessions", "All sessions for ". $name, $ignore_cols);
+}
+else
+{
+    echo ' is broken.<br>';
+}
+
+## test 5c: 
+echo '<b># test 5c # $gym_reports->get_all_contracts_for_client($client_id, $limit);</b>';
+$client_id = "clt_20140809_150843";
+$limit = "LIMIT 5";
+$client_details = $gym_reports->get_client_details($client_id);
+if ($client_details !== false)
+{
+    echo ' is working properly. Data: <br>';
+    var_dump($client_details);
+}
+else
+{
+    echo ' is broken.<br>';
+}
+
+
 ## test 6: 
 echo '<b># test 6 # $gym_reports->get_all_sales_by_client($limit);</b>';
 $limit = "LIMIT 5";

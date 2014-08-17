@@ -29,7 +29,7 @@ html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote, 
 }
 .tbl_data_cell_even
 {
-    background-color: rgba(249, 124, 19, 0.68);
+    background-color: rgba(131, 163, 204, 0.8);
     padding: 2px 5px;
 }
 .tbl_data_cell_odd
@@ -47,7 +47,7 @@ html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote, 
     width: 100%;
     margin:1%;
     padding: 10px;
-    border: 3px darkred groove;
+    border: 3px darkblue groove;
     -webkit-border-radius: 20px 20px 20px 20px;
     -moz-border-radius: 20px 20px 20px 20px;
     border-radius: 20px 20px 20px 20px; 

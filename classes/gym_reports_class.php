@@ -325,6 +325,109 @@ class gym_reports_class
     }
 
     /*
+     * List all sessions ever done by a specific client.
+     * Returns an array 
+     */
+    function get_all_sessions_for_client($client_id, $limit)
+    {
+        try {
+                $stmt = $this->connect->prepare("/* List all contracts for a specific client */
+                        SELECT
+                            DATE(date) AS 'Date',
+                            CONCAT(sylver_gymmngr.clients.first_name, ' ', sylver_gymmngr.clients.last_name) AS 'Name',
+                            sylver_gymmngr.sessions.`type` AS 'Type',
+                            sylver_gymmngr.trainers.first_name AS 'Trainer'
+                        FROM 
+                            sylver_gymmngr.sessions
+                        JOIN 
+                            sylver_gymmngr.clients ON sylver_gymmngr.sessions.client_id = sylver_gymmngr.clients.client_id
+                        JOIN 
+                            sylver_gymmngr.trainers ON sylver_gymmngr.sessions.trainer_id = sylver_gymmngr.trainers.trainer_id
+                        WHERE
+                            sylver_gymmngr.sessions.client_id = :client_id 
+                        ORDER BY date DESC;
+                        $limit
+                        ;");
+            $stmt->bindParam(':client_id', $client_id);
+            if ($stmt->execute())
+            {
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+            else 
+            {
+                return false;
+            }
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+
+
+    /*
+     * Contact details of a specific client.
+     * Returns an array 
+     */
+    function get_client_details($client_id)
+    {
+        try {
+                $stmt = $this->connect->prepare("/* Details of a specific client */
+                        SELECT
+                            * 
+                        FROM 
+                            sylver_gymmngr.clients 
+                        WHERE
+                            sylver_gymmngr.clients.client_id = :client_id 
+                        ;");
+            $stmt->bindParam(':client_id', $client_id);
+            if ($stmt->execute())
+            {
+                $client_details = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $client_details[0];
+            }
+            else 
+            {
+                return false;
+            }
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+    
+    /*
+     * Contact details of a specific trainer.
+     * Returns an array 
+     */
+    function get_trainer_details($trainer_id)
+    {
+        try {
+                $stmt = $this->connect->prepare("/* Details of a specific client */
+                        SELECT
+                            * 
+                        FROM 
+                            sylver_gymmngr.trainers 
+                        WHERE
+                            sylver_gymmngr.trainers.trainer_id = :trainer_id 
+                        ;");
+            $stmt->bindParam(':trainer_id', $trainer_id);
+            if ($stmt->execute())
+            {
+                $trainer_details = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $trainer_details[0];
+            }
+            else 
+            {
+                return false;
+            }
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+    
+    
+    /*
      * List active contracts for a specific client.
      * Returns an array 
      */
