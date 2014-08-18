@@ -778,6 +778,50 @@ class gym_reports_class
         }
     }
 
+    /*
+     * Count the days since last session for all clients.
+     * Clients who haven't been training for the longest period show on top.
+     * Clients who haven't trained for less than $min or more than $max are ignored
+     * (Looking for clients gone AWOL here)
+     */
+    function days_since_last_session($min, $max, $limit)
+    {
+        try {
+                $stmt = $this->connect->prepare("
+                        SELECT
+                            DATE(sylver_gymmngr.sessions.`date`) AS 'Date',    
+                            MIN(DATEDIFF(DATE(now()), DATE(sylver_gymmngr.sessions.`date`))) AS 'Days since last session',
+                            CONCAT(sylver_gymmngr.clients.first_name, ' ', sylver_gymmngr.clients.last_name) AS 'Client'    
+                        FROM 
+                            sylver_gymmngr.sessions
+                        JOIN
+                            sylver_gymmngr.clients ON 
+                            sylver_gymmngr.sessions.client_id = sylver_gymmngr.clients.client_id
+                        GROUP BY 
+                            sylver_gymmngr.sessions.client_id
+                        HAVING
+                            MIN(DATEDIFF(DATE(now()), DATE(sylver_gymmngr.sessions.`date`))) >= :min AND
+                            MIN(DATEDIFF(DATE(now()), DATE(sylver_gymmngr.sessions.`date`))) <= :max
+                        ORDER BY 
+                            MIN(DATEDIFF(DATE(now()), DATE(sylver_gymmngr.sessions.`date`))) DESC
+                        $limit
+                        ;");
+            $stmt->bindParam(':min', $min);
+            $stmt->bindParam(':max', $max);
+            if ($stmt->execute())
+            {
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+            else 
+            {
+                return false;
+            }
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+    
 
     
     

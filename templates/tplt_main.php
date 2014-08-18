@@ -14,7 +14,7 @@
     <link href="css/jquery-ui-1.10.3.custom.min.css" rel="stylesheet">
 </head>
 <body>
-    <div id="header">
+    <div id="header" class="clearfix">
         <div id="logo">
             <h2><a href="index.php?pge=dashboard">Gym Manager</a></h2>
         </div>

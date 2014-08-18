@@ -28,8 +28,8 @@ ob_start();
         <li><a href='index.php?pge=forms/add_trainer'>New trainer</a></li>
     </ul>
     <h2>Edit existing...</h2>
-    <ul>
-        <li>client</li>
+    <ul id="lks_edit">
+        <li><a href='index.php?pge=forms/edit_clients'>Edit clients</a></li>
         <li>contract</li>
         <li>package</li>
         <li>trainer</li>

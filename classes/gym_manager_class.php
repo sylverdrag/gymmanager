@@ -21,7 +21,7 @@ class gym_manager_class
     private $trainer_id    = ""; // valid format is tnr_yyyymmdd_hhmmss
     private $type          = "";
     private $comments      = "";
-    private $connect       = "";
+    public $connect       = "";
     
     /**
      * Training package specific variables (a training package is a number of training sessions sold together)

@@ -27,11 +27,7 @@ ob_start();
         <li><a href='index.php?pge=reports/sales_overview'>Sales overview</a></li>
         <li><a href='index.php?pge=reports/client_summary'>Client summary</a></li>
         <li><a href='index.php?pge=reports/trainer_summary'>Trainer summary</a></li>
-    </ul>  
-    <h2>Extra reports...</h2>
-    <ul id="lks_reports">
-        <li><a href='index.php?pge=reports/awol_clients'>AWOL clients</a></li>
-    </ul>
+    </ul> 
 </div>
 
 <?php

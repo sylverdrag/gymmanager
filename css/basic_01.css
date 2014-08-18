@@ -15,6 +15,15 @@ html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote, 
     -moz-box-sizing: border-box;
     box-sizing: border-box;    
 }
+/*Clearfix*/
+.clearfix:after, .cf:after {
+    clear: both;
+}
+.clearfix:before, .clearfix:after, .cf:before, .cf:after {
+    content: "";
+    display: block;
+    overflow: hidden;
+}
 
 body
 {
@@ -72,7 +81,7 @@ fieldset
 /* Layout for the main template */
 #header
 {
-    height: 120px;
+    min-height: 80px;
 
 /*    background: -moz-linear-gradient(top,  rgba(130,130,130,1) 0%, rgba(34,34,34,1) 49%, rgba(0,0,0,1) 90%, rgba(255,255,255,0.31) 94%, rgba(255,255,255,0) 100%);  FF3.6+ 
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(130,130,130,1)), color-stop(49%,rgba(34,34,34,1)), color-stop(90%,rgba(0,0,0,1)), color-stop(94%,rgba(255,255,255,0.31)), color-stop(100%,rgba(255,255,255,0)));  Chrome,Safari4+ 
@@ -88,7 +97,7 @@ fieldset
 }
 #logo
 {
-    padding: 25px;
+    padding: 15px;
     margin: 0 50px 0 0;
     float: left;
 }
@@ -99,19 +108,17 @@ fieldset
 }
 #mnu_header
 {
-    position: absolute;
-    right: 15%;
     margin-left: 40px;
-    width: 550px;
+    float: left;
 }
 .mnu_header
 {
     float: left;
-    margin: 44px 30px 0 0; 
+    margin: 24px 30px 0 0; 
     border-left: 1px solid rgba(200, 200, 200, 0.5);
     padding: 0px 20px 0px 10px; 
     line-height: 1;
-    height: 70px;
+    height: 50px;
     font-size: 1.3em;    
 }
 .mnu_header a
@@ -121,11 +128,9 @@ fieldset
 }
 #main
 {
-    min-width: 700px;
+    min-width: 450px;
     max-width: 900px;
-    margin: 5px auto 0 auto;
-    position: relative;
-    top: -5px;
+    margin: 0px auto 0px auto;
     padding: 20px 0 0 0;
     background-color: rgba(131, 163, 204, 0.72);
     min-height: 800px;
@@ -133,7 +138,7 @@ fieldset
 
 #bottom 
 {
-    background: url("graphics/bg-dark.png") repeat scroll 0 0 #333333;
+    background: url("graphics/bg-dark.png") repeat scroll 0 0 rgba(70, 70, 225, 1);
     color: #AAAAAA;
     font-size: 0.8em;
     position: relative;
@@ -164,11 +169,24 @@ fieldset
     list-style: none;
     margin: 10px 50px;
 }
-#lks_create a, #lks_reports a
+#lks_create a, #lks_reports a, #lks_edit a
 {
     text-decoration: none;
     color: darkblue;
     font-style: italic;
+}
+
+/* From Gemchief (record editing) */
+.sectionH{
+	border-bottom: 1px solid Black;
+	border-top: 1px solid black;
+	font-style: italic;
+	padding: 2px 10px 2px 10px;
+	font-weight: bold;
+	background-color: #DFF4FA;
+}
+.formItem{
+	padding: 3px 5px 3px 15px;
 }
 
 /* Buttons and other GUI classes */

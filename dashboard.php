@@ -83,15 +83,15 @@ ob_start();
     $nb_sessions = $gym_reports->get_nb_sessions_in_period($period_start_date, $period_end_date);
 ?>    
     
-    <p style="text-align: center;">
+    <p style="text-align: center;clear: both;">
         <label class="" style="">
             From</label>
-        <input type="text" size="15" maxlength="50" id="from_date" name="start_date" value="<?= $period_start_date; ?>" style="width: 150px;padding: 2px;"/> 
+        <input type="text" size="15" maxlength="50" id="from_date" name="start_date" value="<?= $period_start_date; ?>" style="width: 150px;padding: 4px;"/> 
         <label class="" style="">
             To</label>
-        <input type="text" size="15" maxlength="50" id="to_date" name="end_date" value="<?= $period_end_date; ?>"  style="width: 150px;padding: 2px;" /> 
-        <div id="bt_update_dashboard" class="bt_green_rounded" style="width: 100px; height: 50px; text-align: center;margin: 10px auto;">Update</div>
+        <input type="text" size="15" maxlength="50" id="to_date" name="end_date" value="<?= $period_end_date; ?>"  style="width: 150px;padding: 4px;" /> 
     </p>
+        <div id="bt_update_dashboard" class="bt_green_rounded" style="width: 100px; height: 50px; text-align: center;margin: 10px auto;">Update</div>
     <div id="key_metrics" class="dashboard_widget">
         <h2>Key metrics</h2>
         <p style="text-align: center;"><?= "From " .$period_start_date . " to " . $period_end_date; ?></p>
@@ -141,6 +141,20 @@ echo $gym_reports->results_to_table($all_trainer_activity,
 ?>        
     </div>
     
+    <div id="days_since_last_session" class="dashboard_widget">
+         <h2>Days since last session</h2>
+<?php
+$ignore_cols = array();
+// Adjust these values after feedback from Venus
+$min = 0;
+$max = 120;
+$days_since_last_session = $gym_reports->days_since_last_session($min, $max, "");
+echo $gym_reports->results_to_table($days_since_last_session, 
+                                    "Days_since_last_session", 
+                                    "Days since last session", 
+                                    $ignore_cols);
+?>        
+    </div>
 </div>
 
 <?php

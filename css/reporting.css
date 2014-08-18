@@ -36,6 +36,56 @@ html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote, 
 {
     padding: 2px 5px;
 }
+.record
+{
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px navy solid;
+}
+.record_even
+{
+    background-color: rgba(131, 163, 204, 1);
+}
+.record_odd
+{
+    background-color: rgba(156, 217, 237, 1);
+}
+.record_data
+{
+    float: left;
+}
+.edit_table
+{
+    width:100%;
+}
+.edit_input
+{
+    min-width: 150px;
+    padding: 4px;
+}
+.record_entry
+{
+    min-width: 150px;
+}
+.record_entry label
+{
+    width: 200px;
+}
+.bt_delete
+{
+    cursor: pointer;
+    margin: 0px 10px 60px 10px;
+}
+.bt_update
+{
+    cursor: pointer;
+    margin: 10px 10px 10px 10px;
+    position: relative;
+    top: 10px;
+    right: 10px;
+    float: right;
+}
+
 .THB
 {
     text-align: right;

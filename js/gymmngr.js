@@ -21,6 +21,11 @@ jQuery.fn.scroll_to_center = function() {
     }, 700);
 }
 
+function confirmSubmit(operation)
+{
+    return confirm("Are you sure you want to " + operation + "?");
+}
+
 function get_contracts_for_client(client_id)
 {    
     $.ajax
@@ -95,7 +100,7 @@ function handle_form()
             }
             else
             {
-                alert(form_purpose + 'An error occured. Please contact the webmaster');
+                alert(form_purpose + ': An error occured. Please contact the webmaster');
             }
         },
         error: function(XMLHttpRequest, textStatus, errorThrown)
@@ -109,6 +114,48 @@ function handle_form()
     return false;
 }
 
+function get_data_to_update(primary_key, db_table_name)
+{   
+    var action      = "update";
+    var form_data   = "";
+    $("." + primary_key).each(function() {
+        form_data += this.id + "=" + this.value + "&";
+    });
+    form_data += "action=" + action;
+    form_data += "&db_table_name=" + db_table_name;
+    return form_data;
+}
+
+function update_record(form_data)
+{
+    $.ajax
+    ({
+        async: true,
+        url: 'handlers/gym_edits.php',
+        type: 'POST',
+        data: form_data,
+        dataType: "text",
+        success: function(result)
+        {
+            if (result === "ok")
+            {
+                alert("Record updated");
+            }
+            else
+            {
+                alert("Could not update: An error occured. Please contact the webmaster");
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown)
+        {
+            // Debugging error message. Add error handling later
+            console.log(JSON.stringify(XMLHttpRequest));
+            console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+        }
+    });
+    
+    return false;
+}
 
 $( window ).load(function(){
     // Get package data and fill out the package details in the form when a package is selected.
@@ -255,6 +302,16 @@ $( window ).load(function(){
             }
         });
 
+    });
+    
+    $(".bt_update").click(function(){
+        var record_id = $(this).attr("id");
+        var db_table_name = $("#db_table_name").val();
+        var form_data = get_data_to_update(record_id, db_table_name);
+        if (confirmSubmit("update " + record_id))
+        {
+            update_record(form_data);
+        }
     });
         
     
