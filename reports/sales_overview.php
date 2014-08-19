@@ -117,7 +117,7 @@ ob_start();
     $ignore_cols = array();
     $ignore_cols[] = "Date";
     $ignore_cols[] = "Training type";
-    echo $gym_reports->results_to_table($sales_by_client, "Sales", "Sales by client (All time)", $ignore_cols);
+    echo $gym_reports->results_to_table($sales_by_client, "Sales", "Sales by client (All time/All branches)", $ignore_cols);
 ?>        
             
     </div>

@@ -6,9 +6,9 @@
 $template = 'templates/tplt_main.php';
 
 # header variables
-$title = "Edit clients";
+$title = "Edit trainers";
 $keywords = "";
-$description = "Edit existing clients.";
+$description = "Edit existing trainers. (Use a different form to create trainers).";
 $extra       = "css/reporting.css";
 
 ##-## Database connection to sylver_gymmngr ##-##  
@@ -30,60 +30,60 @@ $gym_edits = new gym_edits_class($dbh);
  * record extraction logic
  */
 
-if (isset($_GET['client_selected']) && $_GET['client_selected'] == "yes")
+if (isset($_GET['trainer_selected']) && $_GET['trainer_selected'] == "yes")
 {
     $order = $_POST["order"];
     $allowed_sort_orders = array();
     $allowed_sort_orders[] = "last_name ASC";
     $allowed_sort_orders[] = "last_name DESC";
-    $allowed_sort_orders[] = "created_date ASC";
-    $allowed_sort_orders[] = "created_date DESC";
+    $allowed_sort_orders[] = "creation_date ASC";
+    $allowed_sort_orders[] = "creation_date DESC";
 
     if (!in_array($order, $allowed_sort_orders))
     {
-        $order = "created_date ASC"; // most recent first
+        $order = "creation_date ASC"; // most recent first
     }
     
     $query_type = $_POST["constraint"];
     switch ($query_type)
     {
         case "All":
-            $clients_arr = $gym_edits->get_all_clients_for_edit($order);
+            $trainers_arr = $gym_edits->get_all_trainers_for_edit($order);
             break;
 
         case "OnlyToday":
             $today = date("Y-m-d");
-            $clients_arr = $gym_edits->get_clients_for_edit_since($today, $order);
+            $trainers_arr = $gym_edits->get_trainers_for_edit_since($today, $order);
             break;
         
         case "fromDateChk":
             $from_date = $_POST["from_date"];
-            $clients_arr = $gym_edits->get_clients_for_edit_since($from_date, $order);
+            $trainers_arr = $gym_edits->get_trainers_for_edit_since($from_date, $order);
             break;
         
         case "name_is":
             $name = $_POST["name"];
-            $clients_arr = $gym_edits->get_clients_for_edit_by_name($name, $order);
+            $trainers_arr = $gym_edits->get_trainers_for_edit_by_name($name, $order);
             break;
         
         default :
-            $clients_arr = $gym_edits->get_all_clients_for_edit($order);
+            $trainers_arr = $gym_edits->get_all_trainers_for_edit($order);
             break;
     }
-    //var_dump($clients_arr);
-    $clients_edit_table = "";
-    If (count($clients_arr) === 0){
-        $clients_edit_table = "<p style='color:red; font-weight:bold;'>Sorry, no match. Please expand your search.</p>";  
+    //var_dump($trainers_arr);
+    $trainers_edit_table = "";
+    If (count($trainers_arr) === 0){
+        $trainers_edit_table = "<p style='color:red; font-weight:bold;'>Sorry, no match. Please expand your search.</p>";  
     }
     Else
     {
         $hide_cols = array();
-        $hide_cols[] = "client_id";
-        $hide_cols[] = "created_date";
-        $primary_key_name = "client_id";
-        $db_table_name = "sylver_gymmngr.clients";
+        $hide_cols[] = "trainer_id";
+        $hide_cols[] = "creation_date";
+        $primary = "trainer_id";
+        $db_table_name = "sylver_gymmngr.trainers";
 
-        $clients_edit_table = $gym_edits->format_edit_table($clients_arr, $primary_key_name, $db_table_name, $hide_cols);
+        $trainers_edit_table = $gym_edits->format_edit_table($trainers_arr, $primary, $db_table_name,$hide_cols);
     }
 
         
@@ -95,30 +95,30 @@ ob_start();
 ?>
 <div class="main">
     <div class="edit_table">
-        <?= $clients_edit_table; ?>
+        <?= $trainers_edit_table; ?>
     </div>
     <div class="form">
-        <p>This form allows you to modify the details of the clients.</p>
+        <p>This form allows you to modify the details of the trainers.</p>
         <p class="sectionH">Please select the records to edit</p> 
-        <form action="index.php?pge=forms/edit_clients&client_selected=yes" method="post" name="select_clients">
+        <form action="index.php?pge=forms/edit_trainers&trainer_selected=yes" method="post" name="select_trainers">
             <table>
                 <tr><td colspan="2">
                         <div class="formItem">
-                            <input type="radio" value="All" name="constraint" checked="checked" /> All clients
+                            <input type="radio" value="All" name="constraint" checked="checked" /> All trainers
                         </div></td></tr>
                 <tr><td colspan="2">
                         <div class="formItem">
-                            <input type="radio" value="OnlyToday" name="constraint" /> Only client records created today
+                            <input type="radio" value="OnlyToday" name="constraint" /> Only trainer records created today
                         </div></td></tr>
                 <tr><td>
                         <div class="formItem">
-                        <input type="radio" value="fromDateChk" name="constraint" /> Only client records created since  </td><td>
-                        <input type="text" value="yyyy-mm-dd" name="from_date" onClick="select_clients.fromDate.value = ''" />
+                        <input type="radio" value="fromDateChk" name="constraint" /> Only trainer records created since  </td><td>
+                        <input type="text" value="yyyy-mm-dd" name="from_date" onClick="select_trainers.fromDate.value = ''" />
                         </div></td></tr>
                 <tr><td>
                         <div class="formItem">
-                        <input type="radio" value="name_is" name="constraint" /> Client's name contain  </td><td>
-                        <input type="text" value="name" name="name" onClick="select_clients.name.value = ''" />
+                        <input type="radio" value="name_is" name="constraint" /> Trainer's name contains  </td><td>
+                        <input type="text" value="name" name="name" onClick="select_trainers.name.value = ''" />
                         </div></td></tr>
                 <tr><td style="text-align:right;">
                         <div class="formItem">
@@ -126,8 +126,8 @@ ob_start();
                         <select name="order">
                             <option value="last_name ASC">Last name (ASC)</option>
                             <option value="last_name DESC">Last name (Desc)</option>
-                            <option value="created_date ASC" selected>Creation date (ASC)</option>
-                            <option value="created_date DESC">Creation date (DESC)</option>
+                            <option value="creation_date ASC" selected>Creation date (ASC)</option>
+                            <option value="creation_date DESC">Creation date (DESC)</option>
                         </select> 
                         </div></td></tr>
             </table>

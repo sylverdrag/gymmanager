@@ -23,7 +23,7 @@ for ($i = 0; $i < count($client_list); $i++)
 }
 $select_client = "<select size=\"1\" id=\"client_id\" name=\"client_id\" class=\"entryField\">" . $select_client . "</select>";
 
-$packages = $gymmngr->get_packages_list();
+$packages = $gymmngr->get_active_packages_list();
 $select_packages = "<option value=''>Select package</option>";
 $package_data = htmlentities(json_encode($packages));
 for ($i = 0; $i < count($packages); $i++)

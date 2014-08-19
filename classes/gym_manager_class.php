@@ -648,13 +648,20 @@ class gym_manager_class
     }
 
     /*
-     * Get the list of all active trainers. This is used to populate the drop down box of clients.
-     * Returns an array of arrays [n][client_id], [n][first_name], [n][last_name]
+     * Get the list of all active packages. This is used to populate the drop down box of clients.
+     * Returns an array of arrays [n][package_id], ...
      */
-    function get_packages_list()
+    function get_active_packages_list()
     {
         try {
-            $stmt = $this->connect->prepare("SELECT * FROM training_packages WHERE active = \"yes\"");
+            $stmt = $this->connect->prepare("
+                    SELECT 
+                        * 
+                    FROM 
+                        training_packages 
+                    WHERE 
+                        active = \"yes\"
+                    ;");
             $stmt->execute();
             return $stmt->fetchAll();
         } catch (PDOException $e) {
@@ -663,6 +670,27 @@ class gym_manager_class
         }
     }
 
+    /*
+     * Get the list of all active packages. This is used to populate the drop down box of clients.
+     * Returns an array of arrays [n][package_id], ...
+     */
+    function get_all_packages_list()
+    {
+        try {
+            $stmt = $this->connect->prepare("
+                    SELECT 
+                        * 
+                    FROM 
+                        training_packages
+                    ;");
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+    
     
     /*
      * Get the list of all contracts with remaining sessions for a specific client_id. 
@@ -673,7 +701,16 @@ class gym_manager_class
     {
         try {
             $today = date("Y-m-d H:m:s");
-            $stmt = $this->connect->prepare("SELECT * FROM contracts WHERE client_id = :clientid AND expire_date > '$today' AND remaining_sessions > 0");
+            $stmt = $this->connect->prepare("
+                    SELECT 
+                        * 
+                    FROM 
+                        contracts 
+                    WHERE 
+                        client_id = :clientid AND 
+                        expire_date > '$today' AND 
+                        remaining_sessions > 0
+                    ;");
             $stmt->bindParam(':clientid', $client_id );
             $client_id = $id;
             $stmt->execute();

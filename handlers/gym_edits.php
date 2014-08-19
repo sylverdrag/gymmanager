@@ -26,7 +26,18 @@ $gym_edits = new gym_edits_class($dbh);
 $action=$_POST["action"];
 switch ($action){
     case "update":
-        if ($gym_edits->update_client($_POST)){ echo 'ok'; } else { echo 'error'; }
+        if ($_POST["db_table_name"] == "sylver_gymmngr.clients")
+        {
+            if ($gym_edits->update_client($_POST)){ echo 'ok'; } else { echo 'error'; }
+        }
+        else if ($_POST["db_table_name"] == "sylver_gymmngr.trainers")
+        {
+            if ($gym_edits->update_trainer($_POST)){ echo 'ok'; } else { echo 'error'; }
+        }
+        else if ($_POST["db_table_name"] == "sylver_gymmngr.training_packages")
+        {
+            if ($gym_edits->update_package($_POST)){ echo 'ok'; } else { echo 'error'; }
+        }
         break;
 
 

@@ -30,9 +30,11 @@ ob_start();
     <h2>Edit existing...</h2>
     <ul id="lks_edit">
         <li><a href='index.php?pge=forms/edit_clients'>Edit clients</a></li>
-        <li>contract</li>
-        <li>package</li>
-        <li>trainer</li>
+        <li><a href='index.php?pge=forms/edit_trainers'>Edit trainers</a></li>
+        <h2>EXPERIMENTAL</h2>
+        <p> - do not use if the contract or package is already used in a contract or a session!!!</p>
+        <li><a href='index.php?pge=forms/edit_contracts'>Edit contracts</a></li>
+        <li><a href='index.php?pge=forms/edit_training_packages'>Edit training packages</a></li>
     </ul>
     
 </div>

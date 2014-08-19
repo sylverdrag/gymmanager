@@ -271,7 +271,7 @@ $( window ).load(function(){
 
     });
     
-    // Displaying a summary of the client's contracts and activities
+    // Displaying a summary of the trainer's activities
     $('#bt_display_trainer_summary').click(function(){
         var trainer_name = $('#trainer_id option:selected').text();
         var trainer_id   = $('#trainer_id option:selected').val();

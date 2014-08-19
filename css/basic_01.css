@@ -31,7 +31,8 @@ body
     line-height:1.6; 
     font-weight: normal;
     font-size:100%;
-    background: url("graphics/bg_03.gif") #502D16 repeat;
+    background: url("graphics/bg-light_blue.png") repeat scroll 0 0 rgba(223, 244, 250, 1);
+    /* background: url("graphics/bg_03.gif") #502D16 repeat;
     /*background-color: blanchedalmond;*/
 }
 

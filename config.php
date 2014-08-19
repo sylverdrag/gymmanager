@@ -17,7 +17,9 @@ else
     define ('IMAGE_PATH', "/images");
     $JSconfig["online"] = "no";
 }
-
+ 
+// Set default time zone to Thailand time
+date_default_timezone_set("Asia/Bangkok");
 
 $mnu_header =  "<div class='mnu_header'>" .
                "<a href='index.php?pge=forms/log_session'>Log session</a>" .
