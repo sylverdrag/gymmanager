@@ -64,7 +64,7 @@ ob_start();
 ?>
 <div class="main">
     <form method="POST" enctype="multipart/form-data" class="dataInput" name="client_summary" >
-        <div class="formTitle">Client summary</div>
+        <div class="formTitle">Trainer summary</div>
         <fieldset class="formFieldSet">
             <input type="hidden" value="client_summary" name="report_type" id="report_type" />
             <div class="entry">

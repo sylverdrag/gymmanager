@@ -65,7 +65,35 @@ switch ($action){
         
         $ignore_cols[] = "Trainer";
         $trainer_activity = $gym_reports->trainer_activity_in_period($trainer_id, $from, $to, $limit);
-    
+        //var_dump($trainer_activity);
+        
+        $nb_sessions_done = count($trainer_activity);
+        $session_breakdown = array();
+        foreach ($trainer_activity as $key => $value)
+        {
+            switch ($value["Training type"])
+            {
+                case "TRX":
+                    $session_breakdown["TRX"] +=1; 
+                    break;
+                case "Yoga":
+                    $session_breakdown["Yoga"] +=1;
+                    break;
+                case "Pilates":
+                    $session_breakdown["Pilates"] +=1;
+                    break;
+                case "Boxing":
+                    $session_breakdown["Boxing"] +=1;
+                    break;
+                case "Bodyweight":
+                    $session_breakdown["Bodyweight"] +=1;
+                    break;
+            }
+        }
+        foreach ($session_breakdown as $key => $value)
+        {
+            $session_breakdown_str .= $key  . ": " . $value . "; ";
+        }
         
         $trainer_details = $gym_reports->get_trainer_details($trainer_id);
         $report  =  "<div>Name: <b>" .
@@ -79,6 +107,7 @@ switch ($action){
                     "phone: <b>" . $trainer_details['phone'] . "</b><br />" .
                     "</div>"
                  ;
+        $report .= "<h3># sessions for the period: <b>" . $nb_sessions_done ."</b></h3> (<i>"  . $session_breakdown_str . "</i>)</br>";
         $report .= "<h3>Total fees for the period: <b>".$gym_reports->calculate_trainer_fees($trainer_id, $from, $to) . "</b></h3>";
         $report .= $gym_reports->results_to_table($trainer_activity, "Trainer_Activity", "Trainer activity from " . $from . " to ". $to . " for " . $trainer_name, $ignore_cols);
         $report .= "";

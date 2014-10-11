@@ -11,6 +11,8 @@
     
     <link rel="stylesheet" type="text/css" href="css/basic_01.css?<?php echo date("c"); ?>" media="screen" />
     <link rel="stylesheet" type="text/css" href="<?= ROOT_PATH ?><?= $extra ?>" media="screen" />
+    <link href="css/select2.css" rel="stylesheet"/>
+
     <link href="css/jquery-ui-1.10.3.custom.min.css" rel="stylesheet">
 </head>
 <body>
@@ -41,5 +43,6 @@ Grab Google CDN's jQuery. Fall back to local if necessary
 <script>!window.jQuery && document.write('<script src="<?= $pathRoot ?>js/jquery-1.11.1.min.js"><\/script>')</script>
 <script src="js/jquery-ui-1.10.4.custom.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/gymmngr.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/select2.js" type="text/javascript" ></script>
 </body>
 </html>

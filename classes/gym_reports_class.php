@@ -104,7 +104,8 @@ class gym_reports_class
             $stmt->bindParam(':to_date', $to_date);
             if ($stmt->execute())
             {
-                return $stmt->fetch()["GI"];
+                $results =  $stmt->fetch();
+                return $results["GI"];
             }
             else 
             {
@@ -141,7 +142,8 @@ class gym_reports_class
             $stmt->bindParam(':to_date', $to_date);
             if ($stmt->execute())
             {
-                return $stmt->fetch()["VSD"];
+                $results = $stmt->fetch();
+                return $results["VSD"];
             }
             else 
             {
@@ -519,7 +521,8 @@ class gym_reports_class
             $stmt->bindParam(':to_date', $to_date);
             if ($stmt->execute())
             {
-                return $stmt->fetch()["Sessions"];
+                $results = $stmt->fetch();
+                return $results["Sessions"];
             }
             else 
             {

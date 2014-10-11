@@ -25,7 +25,6 @@ catch (PDOException $e) {
 # Load class
 require("classes/gym_reports_class.php");
 $gym_reports = new gym_reports_class($dbh);
-
 function is_date($date_to_check)
 {
     $pattern = "/^\d{4}-\d{2}-\d{2}/";

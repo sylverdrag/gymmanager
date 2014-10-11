@@ -33,15 +33,19 @@ function get_contracts_for_client(client_id)
         async: true,
         url: 'handlers/gymHandler.php',
         type: 'POST',
-        data: "client_id=" +client_id+ "&formPurpose=get_client_active_contracts",
+        data: "client_id=" + client_id + "&formPurpose=get_client_active_contracts",
         dataType: "text",       /* For some reason the call fails if I return json directly so I am getting the json as text and parsing it.  */
         success: function(result)
         {
             result = $('<div/>').html(result).text();
             result = $.parseJSON(result);
+            $("#contract_id").find('option')
+                                 .remove()
+                                 .end();
+            $("#contract_id").select2('data', null);
             if (result.status === "ok")
-            {
-                 for (var i = 0; i < result.data.length; i++)
+            {                
+                for (var i = 0; i < result.data.length; i++)
                 {       
                     $("#contract_id").append($('<option/>', 
                                             { 
@@ -205,15 +209,27 @@ $( window ).load(function(){
     // Get the contracts for a specific client
     $("#client_id").change(function(){
         var client_id = $(this).val();
-        get_contracts_for_client(client_id);        
+        var formPurpose =$("#formPurpose").val();
+        if (formPurpose === "log_session")
+        {
+            get_contracts_for_client(client_id);
+        }
+                
     });
+    
+    // Search function for client id select drop down.
+    $("select#client_id").select2();
+    $("select#contract_id").select2();
+    $("select#trainer_id").select2();
+    $("select#package_id").select2();
+    
     
     $('#contract_id').change(function(){
        var contract_type = $('#contract_id option:selected').attr("title");
        $('#training_type').val(contract_type);
     });
     
-    $(".submit_form_data").click(function(){
+    $(".submit_form_data").one("click", function(){
         handle_form();
     });
     

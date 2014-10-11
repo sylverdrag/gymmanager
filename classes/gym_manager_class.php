@@ -173,7 +173,8 @@ class gym_manager_class
 
             $contract_id = $id;
             $stmt->execute();
-            return $stmt->fetch()[0];
+            $results = $stmt->fetch();
+            return $results[0];
         } catch (PDOException $e) {
             print "Error!: " . $e->getMessage() . "<br/>";
             die;

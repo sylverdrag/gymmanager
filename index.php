@@ -10,6 +10,8 @@ include_once 'config.php';
 // get dBug
 //include_once 'classes/dBug.php';
 
+//error_reporting(E_ALL);
+
 // Check that a page is selected. If no page is selected, go to the home page.
 if (isset($_GET['pge']))
 {
