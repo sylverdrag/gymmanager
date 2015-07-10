@@ -44,5 +44,6 @@ Grab Google CDN's jQuery. Fall back to local if necessary
 <script src="js/jquery-ui-1.10.4.custom.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/gymmngr.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/select2.js" type="text/javascript" ></script>
+<?= $extra_script; ?>
 </body>
 </html>

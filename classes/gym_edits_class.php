@@ -305,6 +305,129 @@ class gym_edits_class extends gym_manager_class
         }
     }
 
+### Edit contracts     
+    /*
+     * Get the details of all the contracts to allow editing
+     * note: Consider pagination through LIMIT if it gets too much for one page
+     */
+    function get_all_contracts_for_edit($order) 
+    {
+        try {
+            $stmt = $this->connect->prepare("
+                    SELECT 
+                        * 
+                    FROM 
+                        sylver_gymmngr.contracts
+                    ORDER BY $order
+                    ;");
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+    
+    /*
+     * Get the details of the contracts created after a given date for record editing purposes
+     * note: Consider pagination through LIMIT if it gets too much for one page
+     */
+    function get_contracts_for_edit_since($date, $order) 
+    {
+        try {
+            $stmt = $this->connect->prepare("
+                    SELECT 
+                        * 
+                    FROM 
+                        sylver_gymmngr.contracts
+                    WHERE
+                        DATE(creation_date) >= DATE(:date)
+                    ORDER BY :order
+                    ;");
+            $stmt->bindParam(':date', $date);
+            $stmt->bindParam(':order', $order);
+
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+    
+    
+    /**
+     * Checks that the data for the contract makes sense and calls "update_contracts_to_db()"
+     */
+    function update_contract($contract_data)
+    {
+        try
+        {
+            // If the contract_id doesn't exists, abort the update process
+            if (!$this->exists_contract_id($contract_data['contract_id']))
+            {
+                return false;
+            }
+            else
+            {
+                if ($this->update_contract_to_db($contract_data)) { return TRUE; } else { return FALSE; }
+            }        
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+
+    }
+
+   /*
+    * Update a contract's record
+    * Takes a POST array with all the updated contract's data
+    */
+    function update_contract_to_db($contract_data)
+    {
+        try {
+            $stmt = $this->connect->prepare(
+                        "UPDATE contracts SET " 
+                            . "`branch` = :branch,"
+                            . "`training_type` = :training_type,"
+                            . "`nb_sessions` = :nb_sessions,"
+                            . "`price_per_session` = :price_per_session,"  
+                            . "`start_date` = :start_date,"
+                            . "`expire_date` = :expire_date,"  
+                            . "`trainer_rate_modifier` = :trainer_rate_modifier,"  
+                            . "`comments` = :comments"  
+                      . " WHERE "
+                            . "`contract_id` = :contract_id"
+                        );
+            // Array dumped in variables to make it obvious if a value is missing (debugging purposes)
+            $contract_id = $contract_data["contract_id"];
+            $branch = $contract_data["branch"];
+            $training_type = $contract_data["training_type"];
+            $nb_sessions = intval($contract_data["nb_sessions"]);
+            $price_per_session = intval($contract_data["price_per_session"]);
+            $start_date = $contract_data["start_date"];
+            $expire_date = $contract_data["expire_date"];
+            $trainer_rate_modifier = intval($contract_data["trainer_rate_modifier"]);
+            $comments =$contract_data["comments"];
+            
+            $stmt->bindParam(':contract_id', $contract_id);
+            $stmt->bindParam(':branch', $branch);
+            $stmt->bindParam(':training_type', $training_type);
+            $stmt->bindParam(':nb_sessions', $nb_sessions, PDO::PARAM_INT);
+            $stmt->bindParam(':price_per_session', $price_per_session, PDO::PARAM_INT);
+            $stmt->bindParam(':start_date', $start_date);
+            $stmt->bindParam(':expire_date', $expire_date);
+            $stmt->bindParam(':trainer_rate_modifier', $trainer_rate_modifier, PDO::PARAM_INT);
+            $stmt->bindParam(':comments', $comments);
+            
+            $result = $stmt->execute();
+            return $result;
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+     
 ### training Packages   
     
     
@@ -479,6 +602,57 @@ class gym_edits_class extends gym_manager_class
     }
 
 
+    /**
+     * Checks that the data for the contract makes sense and calls "update_contracts_to_db()"
+     */
+    function update_session($session_id, $session_data)
+    {
+        try
+        {
+            // If the session_id doesn't exists, abort the update process
+            if (!$this->exists_session_id($session_id))
+            {
+                return false;
+            }
+            else
+            {
+                if ($this->update_session_to_db($session_id, $session_data)) { return TRUE; } else { return FALSE; }
+            }        
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+
+    }
+
+   /*
+    * Update a session's record
+    * Takes a POST array with all the updated contract's data
+    */
+    function update_session_to_db($session_id, $session_data)
+    {
+        try {
+            $stmt = $this->connect->prepare("
+                        UPDATE sessions SET 
+                            `date` = :date, 
+                            `comments` = :comments
+                        WHERE 
+                            `session_id` = :session_id
+                        ");
+            
+            $stmt->bindParam(':session_id', $session_id);
+            $stmt->bindParam(':date', $session_data["date"]);
+            $stmt->bindParam(':comments', $session_data["comments"]);
+            
+            $result = $stmt->execute();
+            return $result;
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+       
+    
 
 ### Formating    
     /*

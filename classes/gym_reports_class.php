@@ -156,6 +156,35 @@ class gym_reports_class
     }
 
     /*
+     * Count all clients in DB
+     * Returns an int
+     */
+    function count_clients()
+    {
+        try {
+                $stmt = $this->connect->prepare("/* Details of a specific client */
+                        SELECT
+                            COUNT(*) AS 'count'
+                        FROM 
+                            sylver_gymmngr.clients 
+                        ;");
+            if ($stmt->execute())
+            {
+                $count = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $count[0]['count'];
+            }
+            else 
+            {
+                return false;
+            }
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
+    
+    
+    /*
      * List contracts sold over a period and the name of the clients who bought them. Accepts a limit variable.
      * Returns an array containing the date of the contract, the full name of the client, the contract ID, 
      * the total value of the contract and the type of training.
@@ -253,11 +282,12 @@ class gym_reports_class
                             CONCAT(sylver_gymmngr.clients.first_name, ' ', sylver_gymmngr.clients.last_name) AS 'Name',
                             contract_id AS 'Contract ID', 
                             training_type AS 'Type',
-                            nb_sessions AS 'Total Sessions',
-                            nb_sessions - remaining_sessions AS 'Sessions done',
-                            remaining_sessions AS 'Sessions remaining',
+                            nb_sessions AS 'Nb. Ses.',
+                            nb_sessions - remaining_sessions AS 'S.D.',
+                            remaining_sessions AS 'S.R.',
                             FORMAT(nb_sessions * price_per_session, 0) AS 'Total Price',
-                            DATE(expire_date) AS 'Expires on...'
+                            DATE(expire_date) AS 'Expires on...',
+                            comments AS 'Comments'
                         FROM 
                             sylver_gymmngr.contracts
                         JOIN 
@@ -293,19 +323,18 @@ class gym_reports_class
         try {
                 $stmt = $this->connect->prepare("/* List all contracts for a specific client */
                         SELECT
-                            CONCAT(sylver_gymmngr.clients.first_name, ' ', sylver_gymmngr.clients.last_name) AS 'Name',
-                            DATE(creation_date) AS 'Date',
-                            contract_id AS 'Contract ID', 
-                            training_type AS 'Type',
-                            nb_sessions AS 'Total Sessions',
-                            nb_sessions - remaining_sessions AS 'Sessions done',
-                            remaining_sessions AS 'Sessions remaining',
-                            FORMAT(nb_sessions * price_per_session,0) AS 'Total Price',
-                            DATE(expire_date) AS 'Expires on...'
+                            sylver_gymmngr.contracts.contract_id, 
+                            sylver_gymmngr.contracts.creation_date, 
+                            sylver_gymmngr.contracts.branch, 
+                            sylver_gymmngr.contracts.training_type,
+                            sylver_gymmngr.contracts.nb_sessions,
+                            sylver_gymmngr.contracts.price_per_session, 
+                            sylver_gymmngr.contracts.start_date,
+                            sylver_gymmngr.contracts.expire_date, 
+                            sylver_gymmngr.contracts.trainer_rate_modifier,
+                            sylver_gymmngr.contracts.comments
                         FROM 
                             sylver_gymmngr.contracts
-                        JOIN 
-                            sylver_gymmngr.clients ON sylver_gymmngr.contracts.client_id = sylver_gymmngr.clients.client_id
                         WHERE
                             sylver_gymmngr.contracts.client_id = :client_id 
                         ORDER BY creation_date ASC
@@ -365,7 +394,45 @@ class gym_reports_class
         }
     }
 
+    /*
+     * List all sessions done on a specific contract
+     * Returns an array 
+     */
+    function get_all_sessions_for_contract($contract_id, $limit)
+    {
+        try {
+                $stmt = $this->connect->prepare("/* List all sessions for a specific contract */
+                        SELECT
+                            sylver_gymmngr.sessions.session_id,
+                            sylver_gymmngr.sessions.date,
+                            sylver_gymmngr.trainers.first_name AS 'trainer',
+                            sylver_gymmngr.sessions.comments                            
+                        FROM 
+                            sylver_gymmngr.sessions
+                        JOIN 
+                            sylver_gymmngr.trainers ON sylver_gymmngr.sessions.trainer_id = sylver_gymmngr.trainers.trainer_id
+                        WHERE
+                            sylver_gymmngr.sessions.contract_id = :contract_id 
+                        ORDER BY date DESC;
+                        $limit
+                        ;");
+            $stmt->bindParam(':contract_id', $contract_id);
+            if ($stmt->execute())
+            {
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+            else 
+            {
+                return false;
+            }
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }
 
+
+    
     /*
      * Contact details of a specific client.
      * Returns an array 
@@ -396,6 +463,37 @@ class gym_reports_class
             die;
         }
     }
+    
+    /*
+     * Contact details of a specific client.
+     * Returns an array 
+     */
+    function get_client_details_by_number($row_nb)
+    {
+        try {
+                $stmt = $this->connect->prepare("/* Details of a specific client */
+                        SELECT
+                            * 
+                        FROM 
+                            sylver_gymmngr.clients 
+                        LIMIT 1 
+                        OFFSET :row_nb
+                        ;");
+            $stmt->bindParam(':row_nb', $row_nb, PDO::PARAM_INT); // $row_nb is an int and the flag PDO::PARAM_INT needs to be there for it to work.
+            if ($stmt->execute())
+            {
+                $client_details = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $client_details[0];
+            }
+            else 
+            {
+                return false;
+            }
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die;
+        }
+    }    
     
     /*
      * Contact details of a specific trainer.

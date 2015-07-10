@@ -33,6 +33,7 @@ ob_start();
         <li><a href='index.php?pge=forms/edit_trainers'>Edit trainers</a></li>
         <h2>EXPERIMENTAL</h2>
         <p> - do not use if the contract or package is already used in a contract or a session!!!</p>
+        <li><a href='index.php?pge=reports/client_editor&client_nb=0'>Edit clients, contracts and sessions</a></li>
         <li><a href='index.php?pge=forms/edit_contracts'>Edit contracts</a></li>
         <li><a href='index.php?pge=forms/edit_training_packages'>Edit training packages</a></li>
     </ul>
@@ -50,4 +51,4 @@ ob_end_clean();
 
 ##-F&R 05-##
 
-?>
+

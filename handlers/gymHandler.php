@@ -7,7 +7,10 @@ session_start();
 include_once('/home/sylver/includes/sylverp.php');
 $db_name="sylver_gymmngr";
 try {
-    $dbh = new PDO('mysql:host=' .$hostname .';dbname='. $db_name, $user, $password);
+    $opt = array(
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION
+    );
+    $dbh = new PDO('mysql:host=' .$hostname .';dbname='. $db_name, $user, $password, $opt);
 }
 catch (PDOException $e) {
     print "Error!: " . $e->getMessage() . "<br/>";
@@ -16,8 +19,11 @@ catch (PDOException $e) {
 ##-## Connected! ##-##
 
 require_once ("../classes/gym_manager_class.php");
+require_once ("../classes/gym_edits_class.php");
 
 $gymmngr = new gym_manager_class($dbh);
+$gym_editor = new gym_edits_class($dbh);
+
 
 $nb_error = 0; // Error counter
 
@@ -140,6 +146,35 @@ switch ($formPurpose){
         $contracts = $gymmngr->get_active_contracts_for_client($_POST["client_id"]);
         $contracts_json = json_encode($contracts);
         echo $contracts_json;
+        break;
+    
+    case "update_client_contracts_sessions":
+        // Get the JSON data
+        $json_data = json_decode($_POST["JSON_data"], TRUE);
+        if ($json_data === FALSE || $json_data === NULL)
+        {
+            echo "Data received is not valid JSON";
+        }
+        else 
+        {
+            // Update the client, contracts and session tables 
+            $client_data = $json_data["client"];
+            $contracts = $json_data["contracts"];
+            $sessions = $json_data["sessions"];
+            $gym_editor->update_client($client_data);
+            
+            foreach ($contracts as $contractID => $contract_data)
+            {
+                $gym_editor->update_contract($contract_data);
+            }
+            
+            foreach ($sessions as $sessionID => $session_data)
+            {
+                $gym_editor->update_session($sessionID, $session_data);
+            }
+            
+            echo "ok";
+        }
         break;
     
 }
