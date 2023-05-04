@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class form | GymManager</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+		</div>
+
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-data_formatting_class.html">data_formatting_class</a></li>
+				<li><a href="class-dBug.html">dBug</a></li>
+				<li class="active"><a href="class-form.html">form</a></li>
+				<li><a href="class-gym_edits_class.html">gym_edits_class</a></li>
+				<li><a href="class-gym_manager_class.html">gym_manager_class</a></li>
+				<li><a href="class-gym_reports_class.html">gym_reports_class</a></li>
+			</ul>
+
+
+
+
+
+			<h3>Functions</h3>
+			<ul>
+				<li><a href="function-array2table.html">array2table</a></li>
+				<li><a href="function-generate_contracts.html">generate_contracts</a></li>
+				<li><a href="function-get_all_3_letters_acronyms.html">get_all_3_letters_acronyms</a></li>
+				<li><a href="function-get_all_4_letters_acronyms.html">get_all_4_letters_acronyms</a></li>
+				<li><a href="function-is_date.html" class="invalid">is_date</a></li>
+				<li><a href="function-login.html">login</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class form</h1>
+
+
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		
+
+			<b>Located at</b> <a href="source-class-form.html#7-325" title="Go to source code">forms/form_maker/form_class.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-form.html#13-20" title="Go to source code">__construct</a>( <span> <var>$dbLink</var></span>, <span> <var>$cryptKey</var></span>, <span> <var>$formAtt</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getDatabaseFields" id="_getDatabaseFields">
+
+		<td class="attributes"><code>
+			 public 
+
+			&lt;mixed&gt;
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getDatabaseFields">#</a>
+		<code><a href="source-class-form.html#22-53" title="Go to source code">getDatabaseFields</a>( <span>&lt;type&gt; <var>$db_name</var></span>, <span>&lt;type&gt; <var>$tbl</var></span>, <span>&lt;type&gt; <var>$ignoredFields</var></span> )</code>
+
+		<div class="description short">
+			<p>Gets all the fields and field types from a database table</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Gets all the fields and field types from a database table</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$db_name</var></dt>
+					<dd></dd>
+					<dt><var>$tbl</var></dt>
+					<dd></dd>
+					<dt><var>$ignoredFields</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					&lt;mixed&gt;<br>$formItems or false
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="form_db_table" id="_form_db_table">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_form_db_table">#</a>
+		<code><a href="source-class-form.html#55-213" title="Go to source code">form_db_table</a>( <span>&lt;string&gt; <var>$db_name</var></span>, <span>&lt;string&gt; <var>$tbl</var></span>, <span>&lt;array&gt; <var>$ignoredFields</var></span>, <span>&lt;array&gt; <var>$specialFields</var></span>, <span>&lt;array&gt; <var>$existingData</var></span>, <span>&lt;array&gt; <var>$options</var></span> )</code>
+
+		<div class="description short">
+			<p>This function get the details of a table and
+create a form to insert values in that table
+$ignoredFields is an array of fields which should not be in the form
+$specialFields contain complete fields ready to output, (useful if you need fields not in the table)
+$existingData are data that should be displayed in the fields
+$options[formTitle] displays a title above the form in a separe</p>
+
+<p>&lt;</p>
+
+<p>div>
+$options[errors][fieldName] display the field's label in bold red letters
+$options[hidden][fieldName] set field as hidden and the value is $options[hidden][fieldName][value]</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>This function get the details of a table and
+create a form to insert values in that table
+$ignoredFields is an array of fields which should not be in the form
+$specialFields contain complete fields ready to output, (useful if you need fields not in the table)
+$existingData are data that should be displayed in the fields
+$options[formTitle] displays a title above the form in a separe</p>
+
+<p>&lt;</p>
+
+<p>div>
+$options[errors][fieldName] display the field's label in bold red letters
+$options[hidden][fieldName] set field as hidden and the value is $options[hidden][fieldName][value]</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$db_name</var></dt>
+					<dd></dd>
+					<dt><var>$tbl</var></dt>
+					<dd></dd>
+					<dt><var>$ignoredFields</var></dt>
+					<dd></dd>
+					<dt><var>$specialFields</var></dt>
+					<dd></dd>
+					<dt><var>$existingData</var></dt>
+					<dd></dd>
+					<dt><var>$options</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="queryForm" id="_queryForm">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_queryForm">#</a>
+		<code><a href="source-class-form.html#215-249" title="Go to source code">queryForm</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="langCombo" id="_langCombo">
+
+		<td class="attributes"><code>
+			 public 
+
+			&lt;string&gt;
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_langCombo">#</a>
+		<code><a href="source-class-form.html#250-323" title="Go to source code">langCombo</a>( <span>&lt;type&gt; <var>$selectAtt</var></span>, <span>&lt;type&gt; <var>$selected</var></span> )</code>
+
+		<div class="description short">
+			<p>Takes the attributes for the drop down list and the selected item
+and returns the code for a language combo box with the
+specified selected item.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Takes the attributes for the drop down list and the selected item
+and returns the code for a language combo box with the
+specified selected item.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$selectAtt</var></dt>
+					<dd></dd>
+					<dt><var>$selected</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					&lt;string&gt;<br>$combo
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary properties" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="formTag" id="$formTag">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-form.html#9" title="Go to source code"><var>$formTag</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$formTag" class="anchor">#</a>
+				<code><span class="php-quote">&quot;&quot;</span></code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		GymManager API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>
