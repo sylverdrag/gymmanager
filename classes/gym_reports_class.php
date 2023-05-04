@@ -4,8 +4,8 @@
  */
 
 /**
- * Handles the loging of sessions in the system. 
- * Requires a PDO database handle 
+ * Generate reports for the gym's owner, such as the GI for a specific period or 
+ * the trainers' pay  
  * @author: Sylvain Galibert
  */
 class gym_reports_class

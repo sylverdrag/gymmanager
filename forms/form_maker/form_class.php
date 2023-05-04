@@ -1,13 +1,12 @@
 <?php 
 /*
-*
-* This class contain all the functions needed to create forms
-*
-*/
-
+ * Dirty form generator
+ * This class contain functions needed to create forms to populate a database table based on the table's description
+ * It is used as an utility to generate forms code which can then be edited and customized.
+ */
 class form
 {
-  	public  $formTag    = "";
+    public  $formTag    = "";
     private $connect    = "";
     private $cryptKey   = "";
 

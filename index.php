@@ -30,7 +30,7 @@ else
 {
 // If the user is logged in, go to the dashboard page by default
 // else, go to the login page    
-    if (is_array($_SESSION['logged_in_user']))
+    if (is_array(@$_SESSION['logged_in_user']))
     {
         $page = "dashboard";
     }

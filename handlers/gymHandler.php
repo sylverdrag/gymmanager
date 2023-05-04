@@ -109,7 +109,7 @@ switch ($formPurpose){
         break;
        
         
-    case "create_contract":   ###### Creates a new contract ######
+    case "create_contract":   ###### Creates a new contract for an existing customer using an existing package ######
         $gymmngr->set_contract_id($_POST["contract_id"]);
         $gymmngr->set_client_id($_POST["client_id"]);
         $gymmngr->contract_creation_date = $_POST["creation_date"];
@@ -150,10 +150,11 @@ switch ($formPurpose){
     
     case "update_client_contracts_sessions":
         // Get the JSON data
-        $json_data = json_decode($_POST["JSON_data"], TRUE);
+        $json_data = json_decode(stripslashes($_POST["JSON_data"]), TRUE);
         if ($json_data === FALSE || $json_data === NULL)
         {
-            echo "Data received is not valid JSON";
+            $data = implode(";;",  $_POST);
+            echo "Data received: " . $data . " Data received is not valid JSON";
         }
         else 
         {

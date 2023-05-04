@@ -276,10 +276,10 @@ fieldset
     min-width: 150px;
     margin:1%;
     padding: 10px;
-    border: 3px darkblue groove;
-    -webkit-border-radius: 20px 20px 20px 20px;
-    -moz-border-radius: 20px 20px 20px 20px;
-    border-radius: 20px 20px 20px 20px; 
+    border: 1px darkblue groove;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    -moz-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px; 
     background-color: white;
     max-height: 400px;
     overflow-y: auto;

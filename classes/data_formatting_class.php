@@ -4,14 +4,13 @@
  */
 
 /**
- * Massage data for display
- * Requires a PDO database handle 
+ * Massage data for display and editing. Typically used to display a single record from one of the databases (clients, trainers, etc.) 
+ * in a table to let the user edit the details directly.
  * @author: Sylvain Galibert
  */
 class data_formatting_class
 {
     ### class properties ###
-// Add if needed later
 
     ### Constructor ###
     function __construct($dbLink)
@@ -23,6 +22,7 @@ class data_formatting_class
     
     /*
      * Display the data of a 1 dimension array into an editable 2 columns table
+     * Used to create forms to edit data from a single table
      */
     function  array_to_editable_2col_table($data_array, $table_name)
     {
@@ -66,12 +66,17 @@ class data_formatting_class
             }
             $data_tbl .= "<tr class='session'>";
             $session_id = "";
+            // $dates //todo: Put the dates in an array to check for duplicates and put duplicates in red
             foreach ($value0 as $key => $value)
             {
                 if ($key === "session_id")
                 {
                     $session_id = $value;
                     continue;
+                }
+                if ($key === "date")
+                {
+                    
                 }
                 ob_start(); ?>
                     <td contenteditable="true" id="<?=  trim($key); ?>"  data-colname ="<?=  trim($key); ?>" data-sess_id ="<?=  trim($session_id); ?>" class="<?= $table_name; ?>_detail tbl_cell"><?= trim($value) ?></td>

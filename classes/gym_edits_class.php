@@ -5,8 +5,7 @@
  */
 
 /**
- * Handles the loging of sessions in the system. 
- * Requires a PDO database handle 
+ * Lets the user edit data about clients, trainers and sessions. 
  * @author: Sylvain Galibert
  */
 class gym_edits_class extends gym_manager_class 
@@ -23,8 +22,9 @@ class gym_edits_class extends gym_manager_class
                         * 
                     FROM 
                         sylver_gymmngr.clients
-                    ORDER BY $order
+                    ORDER BY :order
                     ;");
+            $stmt->bindParam(':order', $order);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {

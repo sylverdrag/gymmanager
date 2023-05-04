@@ -4,8 +4,9 @@
  */
 
 /**
- * Handles the loging of sessions in the system. 
- * Requires a PDO database handle 
+ * Handles the loging of training sessions in the system.
+ * The gym's clients are sold packages for a certain number of sessions and each time they come and train at the gym, 
+ * the session is logged through this class.
  * @author: Sylvain Galibert
  */
 class gym_manager_class
@@ -420,11 +421,14 @@ class gym_manager_class
 
     }
 
+    /*
+     * Add the new client in the clients' table
+     */
     function add_client_to_db()
     {
         try {
             $stmt = $this->connect->prepare("INSERT INTO clients (client_id, first_name, last_name, address, city, zip, age, sex, phone, email, created_date) " . 
-                                  "VALUES (:client_id, :first_name, :last_name, :address, :city, :zip, :age, :sex, :phone, :email, :created_date)");
+                                            "VALUES (:client_id, :first_name, :last_name, :address, :city, :zip, :age, :sex, :phone, :email, :created_date)");
             $stmt->bindParam(':client_id', $client_id );
             $stmt->bindParam(':first_name', $first_name);
             $stmt->bindParam(':last_name', $last_name);
@@ -504,7 +508,10 @@ class gym_manager_class
         }
 
     }
-
+    
+    /*
+     * Add a new trainer to the trainer's table
+     */
     function add_trainer_to_db()
     {
         try {
@@ -572,7 +579,10 @@ class gym_manager_class
         }
 
     }
-
+    
+    /*
+     * Add a new contract to the contracts' table
+     */
     function add_contract_to_db()
     {
         try {
@@ -733,18 +743,18 @@ class gym_manager_class
 
 ### Utilities
         
-/**
-* Check if the string is a valid ID (like ses_20140725_183521)
-*/
-private function is_valid_id($sInput)
-{
-    $pattern = "/^.{3}_\d{8}_\d{6}$/";
-    if (preg_match($pattern, $sInput) ==1){
-            return true;
-    } else {
-            return false;
+    /**
+    * Check if the string is a valid ID (like ses_20140725_183521)
+    */
+    private function is_valid_id($sInput)
+    {
+        $pattern = "/^.{3}_\d{8}_\d{6}$/";
+        if (preg_match($pattern, $sInput) ==1){
+                return true;
+        } else {
+                return false;
+        }
     }
-}
 
 
 ### Getters and Setters ###
@@ -838,4 +848,3 @@ private function is_valid_id($sInput)
     }
 }
 
-?>
